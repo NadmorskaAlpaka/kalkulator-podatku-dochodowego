@@ -3,17 +3,19 @@ import Home from "./pages/Home";
 import NoPage from "./components/NoPage";
 import "./styles/app.css";
 import Footer from "./components/Footer";
+import Navigation from "./components/Navigation";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="*" element={<NoPage />} />
-        </Routes>
+        <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="*" element={<NoPage />} />
+          </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   )
 }

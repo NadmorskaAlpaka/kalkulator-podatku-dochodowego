@@ -1,0 +1,40 @@
+nav{
+    background-color: rgba(112, 112, 112, 0.24693627450980393);
+}
+
+.nav__container{
+    max-width: 1920px;
+    padding: 0 4%;
+    margin: 0 auto;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav__icon{
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav__icon > .material-symbols-outlined{
+    font-size: 40px;
+    color: var(--black);
+    transition: 300ms ease all;
+}
+
+.nav__icon > .material-symbols-outlined:hover{
+    color: var(--color1);
+}
+
+@media screen and (max-width: 768px) {
+    .nav__container{
+        padding: 0 20px;
+    }
+    
+    .nav__icon > .material-symbols-outlined{
+        font-size: 32px;
+    }
+}
