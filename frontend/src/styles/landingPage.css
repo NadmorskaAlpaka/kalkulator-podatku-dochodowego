@@ -1,0 +1,146 @@
+#landing-page{
+    width: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 44%, rgba(112,112,112,0.24693627450980393) 100%);
+}
+
+.landig-page__box{
+    margin: 0 auto;
+    max-width: 1920px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.landig-page__content{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 5%;
+    padding-top: 10%;
+}
+
+.title{
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.sub-title{
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 12px;
+    color: var(--black);
+}
+
+.landing-page__img{
+    max-width: 40%;
+}
+
+#landing-page .text{
+    margin-top: 8px;
+}
+
+#landing-page .cta{
+    margin-top: 24px;
+    font-size: 20px
+}
+
+@media screen and (max-width: 1440px) {
+    .title{
+        font-size: 36px;
+    }
+
+    .sub-title{
+        font-size: 20px;
+    }
+
+    #landing-page .cta{
+        font-size: 18px
+    }
+}
+
+@media screen and (max-width: 1240px) {
+    .landig-page__content{
+        padding-left: 3%;
+        padding-top: 8%;
+    }
+    
+    .title{
+        font-size: 32px;
+    }
+
+    .sub-title{
+        font-size: 18px;
+    }
+
+    #landing-page .cta{
+        margin-top: 16px;
+        font-size: 18px
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .landig-page__box{
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .landig-page__content{
+        align-items: center;
+        padding-left: 0;
+        padding-top: 24px;
+    }
+
+    .landing-page__img{
+        margin-top: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .title{
+        font-size: 28px;
+    }
+
+    .sub-title{
+        font-size: 16px;
+    }
+
+    #landing-page .cta{
+        font-size: 16px
+    }
+
+    .landing-page__img{
+        max-width: 75%;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .landig-page__box{
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        padding: 0 12px;
+    }
+
+    .landing-page__line-break{
+        display: none;
+    }
+
+    .title{
+        font-size: 24px;
+    }
+
+    .sub-title{
+        font-size: 16px;
+    }
+
+    #landing-page .cta{
+        font-size: 14px
+    }
+
+    .landing-page__img{
+        max-width: 90%;
+    }
+}
