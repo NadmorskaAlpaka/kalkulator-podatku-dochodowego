@@ -1,6 +1,6 @@
 #landing-page{
     width: 100%;
-    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 44%, rgba(112,112,112,0.24693627450980393) 100%);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 44%, var(--light-gray) 100%);
 }
 
 .landig-page__box{

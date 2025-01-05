@@ -9,7 +9,7 @@ const Navigation = () => {
                 <Link className="nav__icon" to="/">
                     <span className="material-symbols-outlined">home</span>
                 </Link>
-                <Link className="nav__icon" to="/login">
+                <Link className="nav__icon" to="/logowanie">
                     <span className="material-symbols-outlined">account_circle</span>
                 </Link>
             </div>

@@ -1,0 +1,24 @@
+#no-account{
+    margin: 24px 0 68px 0;
+}
+
+.no-account__box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-account--header{
+    font-size: 20px;
+}
+
+.no-account__box .cta{
+    background-color: var(--white);
+    color: var(--black);
+    margin-top: 24px;
+}
+
+.no-account__box .cta:hover {
+    background-color: var(--color1);
+    color: var(--white);
+}

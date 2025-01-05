@@ -1,5 +1,5 @@
 nav{
-    background-color: rgba(112, 112, 112, 0.24693627450980393);
+    background-color: var(--light-gray);
 }
 
 .nav__container{
