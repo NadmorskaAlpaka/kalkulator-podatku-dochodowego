@@ -10,6 +10,9 @@
 :root{
     --black: #000000;
     --white: #ffffff;
+    --light-gray: #7070703f;
+    --light-gray2: #7070708f;
+    --dark: #1E2E3B;
     --color1: #98B1B6;
     --color2: #D9B88D;
     --color3: #E29784;
@@ -25,7 +28,7 @@ img{
 
 .container{
     margin: 0 auto;
-    max-width: 1480px;
+    max-width: 1320px;
     width: 100%;
     padding: 0 20px;
 }
@@ -36,11 +39,15 @@ img{
 }
 
 .cta{
-    background-color: transparent;
+    border: 2px solid var(--black);
+    text-decoration: none;
+    display: block;
+    width: fit-content;
+    background-color: var(--black);
     border-radius: 4px;
     font-size: 16px;
     padding: 8px 32px;
-    color: var(--black);
+    color: var(--white);
     font-weight: 500;
     transition: all 300ms ease;
 }
@@ -48,6 +55,51 @@ img{
 .cta:hover{
     color: var(--white);
     background-color: var(--color1);
+    border-color: var(--color1);
+}
+
+.input__field{
+    font-size: 16px;
+    border: 2px solid var(--light-gray2);
+    border-radius: 4px;
+    padding: 4px 16px;
+    transition: all 300ms ease;
+}
+
+.input__field:hover{
+    border-color: var(--black);
+}
+
+.input__label{
+    align-self: flex-start;
+    color: var(--black);
+    font-size: 16px;
+}
+
+.redirection__link{
+    font-size: 14px;
+    text-align: left;
+    align-self: flex-start;
+    margin-top: 4px;
+    text-decoration: none;
+    color: var(--black);
+    position: relative;
+}
+
+.redirection__link:after{
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: var(--color2);
+    bottom: -2px;
+    right: 0;
+    transition: all .3s ease;
+}
+
+.redirection__link:hover:after {
+    width: 100%;
+    left: 0;
 }
 
 @media screen and (max-width: 768px) {
