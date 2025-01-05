@@ -36,3 +36,13 @@
 .login__form .input__label{
     margin-top: 16px;
 }
+
+.login__form .redirection__link{
+    align-self: flex-start;
+}
+
+@media screen and (max-width: 768px) {
+    .login__box .text{
+        text-align: center;
+    }
+}

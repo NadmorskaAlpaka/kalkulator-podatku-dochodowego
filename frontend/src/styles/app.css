@@ -79,7 +79,6 @@ img{
 .redirection__link{
     font-size: 14px;
     text-align: left;
-    align-self: flex-start;
     margin-top: 4px;
     text-decoration: none;
     color: var(--black);
