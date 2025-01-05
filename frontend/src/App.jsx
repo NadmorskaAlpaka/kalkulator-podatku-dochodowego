@@ -5,6 +5,7 @@ import NoPage from "./components/NoPage";
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/logowanie" element={<Login />}/>
+            <Route path="/rejestracja" element={<Register />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
         <Footer />

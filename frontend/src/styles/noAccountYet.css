@@ -22,3 +22,10 @@
     background-color: var(--color1);
     color: var(--white);
 }
+
+@media screen and (max-width: 768px) {
+    .no-account--header{
+        font-size: 18px;
+        text-align: center;
+    }
+}
