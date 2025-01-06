@@ -13,14 +13,14 @@ const ChooseTaxPath = () => {
                           size="big" 
                           imgAlt="Osoba nieprowadząca działalnośći" 
                           title="Osoba nieprowadząca działalnośći" 
-                          path="/bez-dzialalnosci" 
+                          path="/pracownik" 
                           buttonText="Wybierz"
                     />
                     <Card imgUrl={BussinesManImg}
                           size="big"
                           imgAlt="Osoba prowadząca działalność" 
                           title="Osoba prowadząca działalność" 
-                          path="/dzialalnosc" 
+                          path="/przedsiebiorca" 
                           buttonText="Wybierz" 
                     />
                 </div>
