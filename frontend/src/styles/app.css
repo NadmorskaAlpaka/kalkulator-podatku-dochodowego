@@ -28,9 +28,15 @@ img{
 
 .container{
     margin: 0 auto;
-    max-width: 1320px;
+    max-width: 1064px;
     width: 100%;
     padding: 0 20px;
+}
+
+.header{
+    font-size: 28px;
+    color: var(--black);
+    text-align: center;
 }
 
 .text{
@@ -104,6 +110,12 @@ img{
 @media screen and (max-width: 768px) {
     .text{
         font-size: 14px;
+    }
+
+    .header{
+        font-size: 22px;
+        color: var(--black);
+        text-align: center;
     }
 
     .cta{
