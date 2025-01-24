@@ -2,13 +2,13 @@ import React from "react";
 import "../styles/card.css";
 import { Link } from "react-router-dom";
 
-const Card = ({ size, imgUrl, imgAlt, title, path, buttonText }) => {
+const Card = ({ size, imgUrl, imgAlt, title, path, buttonText, handleOnClick }) => {
     let cardClasses = ""
     if(size == "big"){
         cardClasses = "card card--big"
-    } else if(cardClasses == "medium"){
+    } else if(size == "medium"){
         cardClasses = "card card--medium"
-    } else {
+    } else if(size == "small" || !size) {
         cardClasses = "card card--small"
     }
 
@@ -16,7 +16,11 @@ const Card = ({ size, imgUrl, imgAlt, title, path, buttonText }) => {
         <div className={cardClasses}>
             <img className="card__img" src={imgUrl} alt={imgAlt} />
             <p className='card__title'>{title}</p>
-            <Link className="cta" to={path}>{buttonText}</Link>
+            {   
+                path !== "" ? 
+                <Link className="cta" to={path}>{buttonText}</Link> :
+                <button className="cta" onClick={handleOnClick}>{buttonText}</button>
+            }
         </div>
     )
 }

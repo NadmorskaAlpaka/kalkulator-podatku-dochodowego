@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPasssword from "./pages/ForgotPassword";
+import CompanyPath from "./pages/CompanyPath";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
             <Route path="/" element={<Home />}/>
             <Route path="/logowanie" element={<Login />}/>
             <Route path="/rejestracja" element={<Register />} />
+            <Route path="/pracownik" element={""} />
+            <Route path="/przedsiebiorca" element={<CompanyPath />} />
             <Route path="/haslo" element={<ForgotPasssword />} />
             <Route path="*" element={<NoPage />} />
           </Routes>

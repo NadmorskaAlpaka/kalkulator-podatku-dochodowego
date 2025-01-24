@@ -1,0 +1,38 @@
+.path-head{
+    margin: 44px 0;
+}
+
+.path-head__title{
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--black);
+}
+
+.path-head__line{
+    height: 2px;
+    border: none;
+    background-color: var(--light-gray);
+    margin: 12px 0 8px 0;
+}
+
+@media screen and (max-width: 1024px) {
+    .path-head__title{
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .path-head{
+        margin: 44px 0 34px 0;
+    }
+
+    .path-head__title{
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .path-head__title{
+        font-size: 24px;
+    }
+}

@@ -22,7 +22,7 @@
 }
 
 .card--small{
-    width: 23%;
+    width: 24%;
     padding: 16px;
 }
 
@@ -34,6 +34,10 @@
 
 .card--big .card__title{
     font-size: 24px;
+}
+
+.card--small .card__title{
+    font-size: 18px;
 }
 
 .card .cta{
