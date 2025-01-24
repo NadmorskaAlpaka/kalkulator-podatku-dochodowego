@@ -7,6 +7,10 @@
     font-family: "Poppins", serif;
 }
 
+html {
+    scroll-behavior: smooth;
+  }
+
 :root{
     --black: #000000;
     --white: #ffffff;
