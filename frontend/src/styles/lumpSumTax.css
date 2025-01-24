@@ -1,0 +1,12 @@
+#lump-sum{
+    margin-bottom: 44px;
+}
+
+.lump-sum__box{
+    display: flex;
+    flex-direction: column;
+}
+
+#lump-sum .cta{
+    margin-top: 12px;
+}
