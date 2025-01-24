@@ -9,7 +9,7 @@
 
 html {
     scroll-behavior: smooth;
-  }
+}
 
 :root{
     --black: #000000;
@@ -17,7 +17,8 @@ html {
     --light-gray: #7070703f;
     --light-gray2: #7070708f;
     --dark: #1E2E3B;
-    --color1: #98B1B6;
+    --green: #98b69c;
+    --color1: #98b6b4;
     --color2: #D9B88D;
     --color3: #E29784;
 }
@@ -109,6 +110,23 @@ img{
 .redirection__link:hover:after {
     width: 100%;
     left: 0;
+}
+
+.animated-box{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease 0.1s;
+    opacity: 0;
+}
+
+.animated-box.open {
+    max-height: 150px;
+    opacity: 1;
+}
+
+.animated-box.closed {
+    max-height: 0;
+    opacity: 0;
 }
 
 @media screen and (max-width: 768px) {

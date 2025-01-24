@@ -1,0 +1,12 @@
+#tax-scale{
+    margin-bottom: 44px;
+}
+
+.tax-scale__box{
+    display: flex;
+    flex-direction: column;
+}
+
+#tax-scale .cta{
+    margin-top: 12px;
+}
