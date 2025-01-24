@@ -10,6 +10,7 @@ import ForgotPasssword from "./pages/ForgotPassword";
 import CompanyPath from "./pages/CompanyPath";
 import TaxScale from "./pages/TaxScale";
 import LumpSumTax from "./pages/LumpSumTax";
+import FlatTax from "./pages/FlatTax";
 
 function App() {
   return (
@@ -23,8 +24,8 @@ function App() {
             <Route path="/pracownik" element={""} />
             <Route path="/przedsiebiorca" element={<CompanyPath />} />
             <Route path="/przedsiebiorca/skala-podatkowa" element={<TaxScale />} />
-            <Route path="/przedsiebiorca/podatek-liniowy" element={""} />
             <Route path="/przedsiebiorca/ryczalt-ewidencjonowany" element={<LumpSumTax />} />
+            <Route path="/przedsiebiorca/podatek-liniowy" element={<FlatTax />} />
             <Route path="/przedsiebiorca/porownanie-opodatkowania" element={""} />
             <Route path="/haslo" element={<ForgotPasssword />} />
             <Route path="*" element={<NoPage />} />

@@ -1,0 +1,12 @@
+#flat-tax{
+    margin-bottom: 44px;
+}
+
+.flat-tax__box{
+    display: flex;
+    flex-direction: column;
+}
+
+#flat-tax .cta{
+    margin-top: 12px;
+}
