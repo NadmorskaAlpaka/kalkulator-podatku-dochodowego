@@ -1,0 +1,29 @@
+.tax-result__box{
+    display: flex;
+    flex-direction: column;
+}
+
+.tax-steps{
+    display: flex;
+    width: 100%;
+    padding: 8px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--light-gray);
+    flex-direction: column;
+    /* background-color: var(--light-gray); */
+}
+
+.tax-steps__head{
+    display: flex;
+    align-items: center;
+}
+
+.tax-steps__header{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.tax-steps .cta{
+    margin-left: 24px;
+    padding: 2px 32px;
+}
