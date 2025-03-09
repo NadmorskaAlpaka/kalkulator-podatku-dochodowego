@@ -1,0 +1,17 @@
+.checkbox__wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start
+}
+
+.checkbox{
+    accent-color: var(--green);
+    color: var(--white);
+    width: 20px;
+    height: 20px;
+}
+
+.checkbox__label{
+    padding-left: 8px;
+    font-size: 16px;
+}

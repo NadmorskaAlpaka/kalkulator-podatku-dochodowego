@@ -7,6 +7,10 @@
     flex-direction: column;
 }
 
+.tax-scale__breaks{
+    font-weight: 500;
+}
+
 #tax-scale .cta{
     margin-top: 12px;
 }
