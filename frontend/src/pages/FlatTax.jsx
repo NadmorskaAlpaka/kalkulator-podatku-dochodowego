@@ -5,8 +5,8 @@ import TaxInput from "../components/TaxInput";
 
 const FlatTax = () => {
 
-    const [costsOfIncome, setCostsOfIncome] = useState(0);
     const [income, setIncome] = useState(0);
+    const [costsOfIncome, setCostsOfIncome] = useState(0);
     
     const handleChange = (e, setter) => {
         setter(e.target.value)

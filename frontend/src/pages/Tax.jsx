@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import "../styles/tax.css"
 import PathHead from "../components/PathHead";
 import CalculateTaxScale from "../components/CalculateTaxScale";
 
