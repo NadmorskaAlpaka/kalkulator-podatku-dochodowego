@@ -4,12 +4,14 @@
 }
 
 .tax-steps{
+    margin: 0 0 44px 0;
     display: flex;
     width: 100%;
-    padding: 8px 8px;
-    border-radius: 12px;
+    padding: 8px 0;
     border: 2px solid var(--light-gray);
     flex-direction: column;
+    border-left: 0;
+    border-right: 0;
     /* background-color: var(--light-gray); */
 }
 
@@ -19,11 +21,11 @@
 }
 
 .tax-steps__header{
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .tax-steps .cta{
-    margin-left: 24px;
+    margin-left: 20px;
     padding: 2px 32px;
 }

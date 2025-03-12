@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/calculateTaxScale.css";
+import TaxResult from "./TaxResult";
+import TaxStep from "./TaxStep";
 
 const CalculateTaxScale = ({data}) => {
 
@@ -59,28 +61,41 @@ const CalculateTaxScale = ({data}) => {
 
     return (
         <div className="tax-result__box">
-            <div className="tax-result">
-                <h2>Podatek dochodowy: {tax}</h2>
-                <h2>Składki społeczne: {socialContributions}</h2>
-                <h2>Składka zdrowotna: {healthContribution}</h2>
-            </div>
+            <TaxResult tax={tax} 
+                       socialContributions={socialContributions}
+                       healthContribution={healthContribution}
+            />
             <div className="tax-steps">
                 <div class="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
-                    <p className="tax-steps__header">Obliczenia podatku krok po kroku</p>
-                    <button className="cta">Zobacz</button>
+                    <p className="tax-steps__header">Szczegółowe obliczenia podatku</p>
+                    <button className="cta">{showSteps ? "Zamknij" : "Zobacz"}</button>
                 </div>
                 <div className={`tax-steps__body animated-box ${showSteps ? "open" : "closed"}`}>
-                    <p>{netIncome}</p>
-                    <p>{uEmerytalne}</p>
-                    <p>{uRentowe}</p>
-                    <p>{uChorobowe}</p>
-                    <p>{uWypadkowe}</p>
-                    <p>{funduszPracy}</p>
-                    <p>{socialContributions}</p>
-                    <p>{healthContribution}</p>
+                    <TaxStep name="Roczny przychód brutto:"
+                             calculations={`${data.income} zł`} />
+                    <TaxStep name="Roczne koszty uzyskania przychodu:"
+                             calculations={`${data.costsOfIncome} zł`} />
+                    <TaxStep name="Roczny przychód netto:"
+                             calculations={`${data.income} zł - ${data.costsOfIncome} zł = ${netIncome} zł`} />
+                    <TaxStep name="Ubezpieczenie emerytalne:" 
+                             calculations={`${contributionBasis} zł * 19.52% = ${uEmerytalne} zł`} />
+                    <TaxStep name="Ubezpieczenie rentowe:" 
+                             calculations={`${contributionBasis} zł * 8% = ${uRentowe} zł`} />
+                    <TaxStep name="Ubezpieczenie chorobowe:" 
+                             calculations={`${contributionBasis} zł * 2.45% = ${uChorobowe} zł`} />
+                    <TaxStep name="Ubezpieczenie wypadkowe:" 
+                             calculations={`${contributionBasis} zł * 1.67% = ${uWypadkowe} zł`} />
+                    <TaxStep name="Składka na fundusz pracy:" 
+                             calculations={`${contributionBasis} zł * 2.45% = ${funduszPracy} zł`} />
+                    <TaxStep name="Suma składek społecznych:" 
+                             calculations={`${socialContributions} zł`} />
+                    <TaxStep name="Składka zdrowotna:" 
+                             calculations={`${netIncome} zł * 9% = ${healthContribution} zł`} />
                     <p>{taxBase}</p>
                     <p>{isTaxFree ? "Kontynuacja obliczania podatku" : "Wolny od podatku"}</p>
                     <p>{tax}</p>
+                    <TaxStep name="Danina solidatnościowa:" 
+                             calculations={`(${netIncome} zł - 1000000 zł) * 4% = ${danina} zł`} />
                     <p>danina {danina}</p>
                 </div>
             </div>
