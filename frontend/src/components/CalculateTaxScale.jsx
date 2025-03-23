@@ -66,7 +66,7 @@ const CalculateTaxScale = ({data}) => {
                        healthContribution={healthContribution}
             />
             <div className="tax-steps">
-                <div class="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
+                <div className="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
                     <p className="tax-steps__header">Szczegółowe obliczenia podatku</p>
                     <button className="cta">{showSteps ? "Zamknij" : "Zobacz"}</button>
                 </div>

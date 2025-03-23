@@ -10,7 +10,7 @@ const Navigation = () => {
                     <span className="material-symbols-outlined">home</span>
                 </Link>
                 <Link className="nav__icon" to="/ustawienia">
-                    <span class="material-symbols-outlined">settings</span>
+                    <span className="material-symbols-outlined">settings</span>
                 </Link>
             </div>
         </nav>
