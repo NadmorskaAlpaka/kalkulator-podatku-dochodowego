@@ -33,8 +33,8 @@ function App() {
   }, [taxParameters]);
 
   const reset = () => {
+    console.log("Reset App")
     setTaxParameters(defaultValues);
-    console.log(taxParameters)
   }
 
   return (
@@ -45,7 +45,7 @@ function App() {
         <Navigation />
           <Routes>
             <Route path="/" element={<Home />}/>
-            <Route path="/ustawienia" element={<Settings taxParameters={taxParameters} reset={reset}/>} />
+            <Route path="/ustawienia" element={<Settings taxParameters={taxParameters} setTaxParameters={setTaxParameters} reset={reset} localStorageKey={LOCAL_STORAGE_KEY}/>} />
             {/* <Route path="/logowanie" element={<Login />}/>
             <Route path="/rejestracja" element={<Register />} />
             <Route path="/pracownik" element={""} /> */}
