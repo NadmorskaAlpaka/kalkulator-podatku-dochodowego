@@ -18,6 +18,7 @@ html {
     --light-gray2: #7070708f;
     --dark: #1E2E3B;
     --green: #98b69c;
+    --red: #f13000;
     --color1: #98b6b4;
     --color2: #D9B88D;
     --color3: #E29784;
@@ -127,6 +128,10 @@ img{
 .animated-box.closed {
     max-height: 0;
     opacity: 0;
+}
+
+.error__message{
+    color: var(--red);
 }
 
 @media screen and (max-width: 768px) {

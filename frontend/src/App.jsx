@@ -27,10 +27,10 @@ function App() {
     return savedData ? JSON.parse(savedData) : defaultValues; 
   });
 
-  useEffect(() => {
-    console.log("TaxParameters",taxParameters);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
-  }, [taxParameters]);
+  // useEffect(() => {
+  //   console.log("TaxParameters",taxParameters);
+  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
+  // }, [taxParameters]);
 
   const reset = () => {
     console.log("Reset App")
@@ -54,7 +54,7 @@ function App() {
             <Route path="/przedsiebiorca/ryczalt-ewidencjonowany" element={<LumpSumTax />} />
             <Route path="/przedsiebiorca/podatek-liniowy" element={<FlatTax />} />
             <Route path="/przedsiebiorca/porownanie-opodatkowania" element={""} /> */}
-            <Route path="/skala-podatkowa" element={<TaxScale />} />
+            <Route path="/skala-podatkowa" element={<TaxScale taxParameters={taxParameters}/>} />
             <Route path="/ryczalt-ewidencjonowany" element={<LumpSumTax />} />
             <Route path="/podatek-liniowy" element={<FlatTax />} />
             <Route path="/porownanie-opodatkowania" element={<TaxCompare />} />

@@ -8,7 +8,7 @@ const Tax = () => {
     const location = useLocation();
     const data = location.state;
     useEffect(() => {
-        console.log(data)
+        console.log("TAX",data)
     },[])
 
     return (
