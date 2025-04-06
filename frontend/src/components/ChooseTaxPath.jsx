@@ -3,30 +3,33 @@ import "../styles/chooseTaxPath.css"
 // import BussinesManImg from "../assets/bussines_man.png";
 // import Card from './Card';
 import PathBody from "../components/PathBody";
-import image from "../assets/bussines_man.png";
+import bussinesMan from "../assets/bussines_man.png";
+import bussinesWoman from "../assets/bussines_woman.png";
+import bussingesGrandpa from "../assets/bussines_grandpa.png";
+import bussinesTrio from "../assets/bussines_trio.png";
 
 const taxPaths = [
     {
         title: "Rozliczam się według skali podatkowej",
-        imgUrl: image,
+        imgUrl: bussinesMan,
         imgAlt: "Skala podatkowa",
         path: "skala-podatkowa",
     },
     {
         title: "Rozliczam się podatkiem liniowym",
-        imgUrl: image,
+        imgUrl: bussinesWoman,
         imgAlt: "Podatek liniowy",
         path: "podatek-liniowy"
     },
     {
         title: "Rozliczam się ryczałtem ewidencjonowanym",
-        imgUrl: image,
+        imgUrl: bussingesGrandpa,
         imgAlt: "Ryczałt ewidencjonowany",
         path: "ryczalt-ewidencjonowany"
     },
     {
         title: "Porównanie sposobów opodatkowania",
-        imgUrl: image,
+        imgUrl: bussinesTrio,
         imgAlt: "Porównanie opodatkowania",
         path: "porownanie-opodatkowania"
     }

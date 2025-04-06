@@ -5,65 +5,97 @@ import TaxStep from "./TaxStep";
 
 const CalculateTaxScale = ({data}) => {
 
+    // --- \/ - DATA PREPARATION - \/ --- //
+
+    const {taxData} = data;
+    const {taxParameters} = data;
+
+    const {socialContributions} = taxParameters;
+    const {taxScale} = taxParameters;
+    const {healthCountributions} = taxParameters;
+    const {taxBreaks} = taxParameters;
+    const {danina} = taxParameters;
+    const {taxFreeAmout} = taxParameters;
+
+    // --- /\ --------------- /\ --- //
+
     const [showSteps, setShowSteps] = useState(false);
 
-    const contributionBasis = 5203.80;
-
-    const netIncome = (data.income - data.costsOfIncome);
-
-    const uEmerytalne = (contributionBasis * 19.52) / 100;
-    const uRentowe = (contributionBasis * 8) / 100;
-    const uChorobowe = (contributionBasis * 2.45) / 100; 
-    const uWypadkowe = (contributionBasis * 1.67) / 100;
-    const funduszPracy = (contributionBasis * 2.45) / 100;
-
-    const socialContributions = uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy;
-    const healthContribution = (netIncome * 9) / 100;
-
-    const taxBase = (netIncome - socialContributions * 12);
-
-    const isTaxFree = taxBase > 30000;
-
     let tax;
+    let taxBreaksValue;
+    let daninaValue;
 
-    if(taxBase <= 120000){
-        tax = ((taxBase * 12) / 100) - 3600;
-    } else if(taxBase > 120000){
-        tax = (((120000 * 12) / 100) - 3600) + ((taxBase - 120000) * 32) / 100; 
-    }
+    const netIncome = (taxData.income - taxData.costsOfIncome);
+    
+    // Składka społeczna
+    const contributionBasis = socialContributions.minSocialContributionBasis;
 
-    let ulgiPodatkowe;
+    const uEmerytalne = (contributionBasis * socialContributions.uEmerytalnePercentage) / 100;
+    const uRentowe = (contributionBasis * socialContributions.uRentowePercentage) / 100;
+    const uChorobowe = (contributionBasis * socialContributions.uChorobowePercentage) / 100; 
+    const uWypadkowe = (contributionBasis * socialContributions.uWypadkowePercentage) / 100;
+    const funduszPracy = (contributionBasis * socialContributions.funduszPracyPercentage) / 100;
+    const socialContributionsValue = uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy;
 
-    if(tax < 0){
+    // Składka zdrowotna
+    const healthContributionsValue = (netIncome * healthCountributions.taxScale.valuePercentage) / 100;
+
+    // Podstawa opodatkowania
+    const taxBase = (netIncome - socialContributionsValue * 12);
+
+    // Sprawdzenie kwotwy wolnej od podatku
+    const isTaxFree = taxFreeAmout > taxBase ;
+
+    if(!isTaxFree){
+
+        // Progi podatkowe
+        if(taxBase <= taxScale.firstMaxIncome){
+            tax = ((taxBase * taxScale.firstPercentage) / 100) - 3600;
+        } else if(taxBase > taxScale.secondMinIncome){
+            tax = (((taxScale.firstMaxIncome * taxScale.firstPercentage) / 100) - 3600) + ((taxBase - taxScale.firstMaxIncome) * taxScale.secondPercentage) / 100; 
+        }
+
+        if(taxData.availableTaxBreaks){
+
+        }
+
+        if(tax < 0){
+            tax = 0;
+        }
+
+        // Danina solidarnościowa
+        if(netIncome > danina.minIncome){
+            daninaValue = ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
+        }
+    
+    } else {
         tax = 0;
     }
 
-    let danina;
-
-    if(netIncome > 1000000){
-        danina = ((netIncome - 1000000) * 4) / 100;
-    }
-
     useEffect(() => {
-        console.log(typeof(contributionBasis))
-        console.log(typeof(netIncome))
-        console.log(typeof(uEmerytalne))
-        console.log(typeof(uRentowe))
-        console.log(typeof(uChorobowe))
-        console.log(typeof(uWypadkowe))
-        console.log(typeof(funduszPracy))
-        console.log(typeof(socialContributions))
-        console.log(typeof(healthContribution))
-        console.log(typeof(taxBase))
-        console.log(typeof(isTaxFree))
-        console.log(data);
+        console.log("Calculate Tax Scale",data);
+        console.log("Calculate Tax Scale tax data", taxData);
+        console.log("Calculate Tax Scale tax parameters", taxParameters);
+        console.log(isTaxFree)
+        // console.log(typeof(contributionBasis))
+        // console.log(typeof(netIncome))
+        // console.log(typeof(uEmerytalne))
+        // console.log(typeof(uRentowe))
+        // console.log(typeof(uChorobowe))
+        // console.log(typeof(uWypadkowe))
+        // console.log(typeof(funduszPracy))
+        // console.log(typeof(socialContributions))
+        // console.log(typeof(healthContribution))
+        // console.log(typeof(taxBase))
+        // console.log(typeof(isTaxFree))
+        // console.log(taxData);
     },[])
 
     return (
         <div className="tax-result__box">
             <TaxResult tax={tax} 
-                       socialContributions={socialContributions}
-                       healthContribution={healthContribution}
+                       socialContributions={socialContributionsValue}
+                       healthContribution={healthContributionsValue}
             />
             <div className="tax-steps">
                 <div className="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
@@ -71,12 +103,12 @@ const CalculateTaxScale = ({data}) => {
                     <button className="cta">{showSteps ? "Zamknij" : "Zobacz"}</button>
                 </div>
                 <div className={`tax-steps__body animated-box ${showSteps ? "open" : "closed"}`}>
-                    <TaxStep name="Roczny przychód brutto:"
-                             calculations={`${data.income} zł`} />
+                    {/* <TaxStep name="Roczny przychód brutto:"
+                             calculations={`${taxData.income} zł`} />
                     <TaxStep name="Roczne koszty uzyskania przychodu:"
-                             calculations={`${data.costsOfIncome} zł`} />
+                             calculations={`${taxData.costsOfIncome} zł`} />
                     <TaxStep name="Roczny przychód netto:"
-                             calculations={`${data.income} zł - ${data.costsOfIncome} zł = ${netIncome} zł`} />
+                             calculations={`${taxData.income} zł - ${taxData.costsOfIncome} zł = ${netIncome} zł`} />
                     <TaxStep name="Ubezpieczenie emerytalne:" 
                              calculations={`${contributionBasis} zł * 19.52% = ${uEmerytalne} zł`} />
                     <TaxStep name="Ubezpieczenie rentowe:" 
@@ -96,7 +128,7 @@ const CalculateTaxScale = ({data}) => {
                     <p>{tax}</p>
                     <TaxStep name="Danina solidatnościowa:" 
                              calculations={`(${netIncome} zł - 1000000 zł) * 4% = ${danina} zł`} />
-                    <p>danina {danina}</p>
+                    <p>danina {danina}</p> */}
                 </div>
             </div>
         </div>
