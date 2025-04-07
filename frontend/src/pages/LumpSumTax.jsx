@@ -1,19 +1,23 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/lumpSumTax.css"
 import PathHead from "../components/PathHead";
 import TaxInput from "../components/TaxInput";
 
-const LumpSumTax = () => {
+const LumpSumTax = ({taxParameters}) => {
+
+    const {LumpSumTax} = taxParameters;
 
     const [income, setIncome] = useState(0);
+    const [selectedFruit, setSelectedFruit] = useState('orange');
 
     const handleChange = (e, setter) => {
         setter(e.target.value)
     }
-        
+
     useEffect(() => {
         console.log("Przychód:", income);
-    },[income])
+        console.log("Ryczałt", taxParameters)
+    }, [income])
 
     return (
         <section id="lump-sum">
@@ -24,6 +28,14 @@ const LumpSumTax = () => {
                     <TaxInput label="Twoj roczny przychód brutto" type="number" value={income}
                         handleChange={(e) => handleChange(e, setIncome)}
                     />
+                    <select
+                        value={selectedFruit} 
+                        onChange={e => setSelectedFruit(e.target.value)}
+                    >   
+                        <option value="apple">Apple</option>
+                        <option value="banana">Banana</option>
+                        <option value="orange">Orange</option>
+                    </select>
                     <button className="cta">Oblicz podatek</button>
                 </div>
             </div>

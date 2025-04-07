@@ -55,9 +55,9 @@ function App() {
             <Route path="/przedsiebiorca/podatek-liniowy" element={<FlatTax />} />
             <Route path="/przedsiebiorca/porownanie-opodatkowania" element={""} /> */}
             <Route path="/skala-podatkowa" element={<TaxScale taxParameters={taxParameters}/>} />
-            <Route path="/ryczalt-ewidencjonowany" element={<LumpSumTax />} />
-            <Route path="/podatek-liniowy" element={<FlatTax />} />
-            <Route path="/porownanie-opodatkowania" element={<TaxCompare />} />
+            <Route path="/ryczalt-ewidencjonowany" element={<LumpSumTax taxParameters={taxParameters}/>} />
+            <Route path="/podatek-liniowy" element={<FlatTax taxParameters={taxParameters}/>} />
+            <Route path="/porownanie-opodatkowania" element={<TaxCompare taxParameters={taxParameters}/>} />
             <Route path="/podatek" element={<Tax />} />
             {/* <Route path="/haslo" element={<ForgotPasssword />} /> */}
             <Route path="*" element={<NoPage />} />
