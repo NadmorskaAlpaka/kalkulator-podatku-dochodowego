@@ -10,11 +10,8 @@ const TaxScale = ({taxParameters}) => {
 
     const navigate = useNavigate();
 
-    const [errorMessage, setErrorMessage] = useState("Przychód musi być większy od 0");
-    const [error, setError] = useState({
-        showError: false,
-        income: false
-    })
+    const [errorMessage, setErrorMessage] = useState([]);
+    const [error, setError] = useState(false);
 
     const [income, setIncome] = useState(0);
     const [costsOfIncome, setCostsOfIncome] = useState(0);
@@ -25,6 +22,7 @@ const TaxScale = ({taxParameters}) => {
         bloodDonation: false,
         newTech: false,
         youth: false,
+        other: false,
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
@@ -35,6 +33,7 @@ const TaxScale = ({taxParameters}) => {
     const [childrenNumber, setChildrenNumber] = useState(0);
     const [bloodLiters, setBloodLiters] = useState(0);
     const [newTechnologyValue, setNewTechnologyValue] = useState(0);
+    const [otherTaxBreakValue, setOtherTaxBreakValue] = useState(0);
 
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);
@@ -49,18 +48,49 @@ const TaxScale = ({taxParameters}) => {
           ...prev,
           [e.target.name]: e.target.checked,
         }));
-      };
+    };
 
     useEffect(() => {
-        console.log("Twoj roczny przychód brutto:", income);
-        console.log("Twoje roczne koszty uzyskania przychodu", costsOfIncome);
-        console.log("Przysługują Ci ulgi podatkowe?", availableTaxBreaks)
-        console.log("Ulgi podatkowe", taxBreaks)
-        console.log("Rozliczasz się wspólnie z małżonkiem?", taxWithSpous)
-        console.log("Roczny dochód małżonka", spouseIncome);
-    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaks])
+        // console.log("Twoj roczny przychód brutto:", income);
+        // console.log("Twoje roczne koszty uzyskania przychodu", costsOfIncome);
+        // console.log("Przysługują Ci ulgi podatkowe?", availableTaxBreaks)
+        // console.log("Ulgi podatkowe", taxBreaks)
+        // console.log("Rozliczasz się wspólnie z małżonkiem?", taxWithSpous)
+        // console.log("Roczny dochód małżonka", spouseIncome);
+        // console.log(error);
+        console.log("licza dzieci wpisywanie",childrenNumber)
+    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaks, error,childrenNumber])
 
     const validateInputs = () => {
+        let error = false;
+        let errorMessage = [];
+
+        if(income <= 0){
+            errorMessage.push("Przychód musi być większy od zera.");
+            error = true;
+        }
+
+        if(costsOfIncome < 0){
+            errorMessage.push("Koszty uzyskania przychodu nie mogą być mniejsze od zera.");
+            error = true;
+        }
+
+        if(availableTaxBreaks && (!taxBreaks.internet && !taxBreaks.rehabilitation && !taxBreaks.child && ! taxBreaks.bloodDonation && !taxBreaks.newTech && !taxBreaks.youth && !taxBreaks.other)){
+            errorMessage.push("Wybierz ulgi podatkowke które Cie dotyczną.");
+            error = true;
+        }
+
+        if(taxWithSpous && spouseIncome <= 0){
+            errorMessage.push("Przychód małżonka musi być większy od zera.");
+            error = true;
+        }
+
+        setErrorMessage(errorMessage)
+        setError(error);
+        return error;
+    }
+
+    const submit = () => {
         const taxData = {
             income,
             costsOfIncome,
@@ -70,9 +100,10 @@ const TaxScale = ({taxParameters}) => {
             spouseIncome,
             internetValue,
             rehabilitationValue,
-            childrenNumber,
+            childrenNumber: Number(childrenNumber),
             bloodLiters,
             newTechnologyValue,
+            otherTaxBreakValue,
         }
 
         let data = {
@@ -81,14 +112,10 @@ const TaxScale = ({taxParameters}) => {
             taxParameters: taxParameters
         }
 
-        if(income > 0){
-            console.log("Sprawdzam dane i przechodzę dalej")
+        const error = validateInputs();
+
+        if(!error){
             navigate("/podatek", {state: data});
-        } else {
-            setError((prev) => ({
-                ...prev,
-                showError: true
-            }))
         }
     }
 
@@ -140,6 +167,12 @@ const TaxScale = ({taxParameters}) => {
                             />
                         </div>
                         <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaks(e)}/>
+                        <Checkbox text="Inna ulga" name="other" handleChange={(e) => handleTaxBreaks(e)}/>
+                        <div className={`animated-box ${taxBreaks.other ? "open" : "closed"}`}>
+                            <TaxInput label="Kwota innych ulg" type="number" value={otherTaxBreakValue}
+                                    handleChange={(e) => handleChange(e,setOtherTaxBreakValue)} 
+                            />
+                        </div>
                     </div>
                     <ToggleInput label="Rozliczasz się wspólnie z małżonkiem?" 
                                  handleChange={(e) => handleCheckbox(e,setTaxWithSpous)}
@@ -150,13 +183,16 @@ const TaxScale = ({taxParameters}) => {
                         />
                     </div>
                     { 
-                        error.showError && 
-                        <p className="error__message">
-                            {errorMessage}
-                        </p>
+                        error && 
+                        <div>
+                            {
+                                errorMessage.map((message, index) => (
+                                    <p key={index} className="error__message">{message}</p>
+                                ))
+                            }
+                        </div>
                     }
-
-                    <button className="cta" onClick={validateInputs}>Oblicz podatek</button>
+                    <button className="cta" onClick={submit}>Oblicz podatek</button>
                 </div>
             </div>
         </section>
