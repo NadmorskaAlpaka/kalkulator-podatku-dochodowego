@@ -10,14 +10,15 @@ const CalculateLumpSumTax = ({data}) => {
     const {taxParameters} = data;
     
     const {socialContributions} = taxParameters;
-    const {healthCountributions} = taxParameters;
+    const avgIncomeLastQuaterPrevYear = taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
+    const healthCountributions = taxParameters.healthCountributions.lumpSumTax;
     
     // --- /\ --------------- /\ --- //
 
     const [showSteps, setShowSteps] = useState(false);
 
     let tax = 0;
-    let healthContributionsValue = 0;
+    let monthlyHealthContributionsValue = 0;
 
     // Składka społeczna
     const contributionBasis = socialContributions.minSocialContributionBasis;
@@ -31,28 +32,33 @@ const CalculateLumpSumTax = ({data}) => {
     const yearlySocialContributions =  monthlySocialContributions * 12;
 
     if(income < 60000){
-
+        let healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.small.basisPercentage) / 100;
+        monthlyHealthContributionsValue =  (healthContributionBasis * healthCountributions.small.valuePercentage) / 100;
     } else if (income >= 60000 && income <= 300000){
-
+        let healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.medium.basisPercentage) / 100;
+        monthlyHealthContributionsValue =  (healthContributionBasis * healthCountributions.medium.valuePercentage) / 100;
     } else if (income > 300000) {
-
+        let healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.big.basisPercentage) / 100;
+        monthlyHealthContributionsValue =  (healthContributionBasis * healthCountributions.big.valuePercentage) / 100;
     }
 
-    const taxBase = income - yearlySocialContributions;
+    let yearlyHealthContributionsValue = monthlyHealthContributionsValue * 12;
 
+    const taxBase = income - yearlySocialContributions;
     tax = (taxBase * lumpSumValue) / 100;
 
     useEffect(() => {
         console.log(lumpSumValue)
         console.log(income)
         console.log(data);
+        console.log("pierwsza zdrowotna", monthlyHealthContributionsValue)
     },[])
 
     return (
         <div className="tax-result__box">
             <TaxResult tax={tax} 
                 socialContributions={yearlySocialContributions}
-                healthContribution={healthContributionsValue}
+                healthContribution={yearlyHealthContributionsValue}
             />
             <div className="tax-steps">
                 <div className="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
