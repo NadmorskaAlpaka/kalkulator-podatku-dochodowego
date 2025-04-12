@@ -27,10 +27,22 @@ function App() {
     return savedData ? JSON.parse(savedData) : defaultValues; 
   });
 
-  // useEffect(() => {
-  //   console.log("TaxParameters",taxParameters);
-  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
-  // }, [taxParameters]);
+  useEffect(() => {
+    const handleWheel = (e) => {
+      const active = document.activeElement;
+      if (active && active.type === 'number') {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      document.removeEventListener('wheel', handleWheel);
+    };
+    // console.log("TaxParameters",taxParameters);
+    // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
+  }, [taxParameters]);
 
   const reset = () => {
     console.log("Reset App")

@@ -4,6 +4,8 @@ import "../styles/tax.css"
 import PathHead from "../components/PathHead";
 import CalculateTaxScale from "../components/CalculateTaxScale";
 import CalculateTaxCompare from "../components/CalculateTaxCompare";
+import CalculateFlatTax from "../components/CalculateFlatTax";
+import CalculateLumpSumTax from "../components/CalculateLumpSumTax";
 
 const Tax = () => {
     const location = useLocation();
@@ -19,9 +21,9 @@ const Tax = () => {
                     title="Podatek obliczony!" 
                     text={`Sposób opodatkowania - ${data.taxType}. Poniżej znajdziesz szczegóły dotyczące Twojego podatku.`}
                 />
-                {data.taxType === "skala podatkowa" && <CalculateTaxScale data={data}/>}
-                {data.taxType === "ryczałt" && <p>ryczałt</p>}
-                {data.taxType === "podatek liniowy" && <p>podatek liniowy</p>}
+                {data.taxType === "skala podatkowa" && <CalculateTaxScale data={data} />}
+                {data.taxType === "ryczałt" && <CalculateLumpSumTax data={data} />}
+                {data.taxType === "podatek liniowy" && <CalculateFlatTax data={data} />}
                 {data.taxType === "porównanie opodatkowania" && <CalculateTaxCompare data={data} />}
             </div>
         </section>

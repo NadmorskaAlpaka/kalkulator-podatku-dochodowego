@@ -71,7 +71,8 @@ img{
     border-color: var(--color1);
 }
 
-.input__field{
+.input__field,
+.input__select{
     font-size: 16px;
     border: 2px solid var(--light-gray2);
     border-radius: 4px;
@@ -79,7 +80,8 @@ img{
     transition: all 300ms ease;
 }
 
-.input__field:hover{
+.input__field:hover,
+.input__select:hover{
     border-color: var(--black);
 }
 
