@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TaxResult from "./TaxResult";
 import TaxStep from "./TaxStep";
+import { calculateSocialContributions } from "../utils/calculateSocialContributions";
 
 const CalculateFlatTax = ({ data }) => {
 
@@ -25,20 +26,12 @@ const CalculateFlatTax = ({ data }) => {
     const netIncome = (taxData.income - taxData.costsOfIncome);
 
     // Składka społeczna
-    const contributionBasis = socialContributions.minSocialContributionBasis;
-
-    const uEmerytalne = (contributionBasis * socialContributions.uEmerytalnePercentage) / 100;
-    const uRentowe = (contributionBasis * socialContributions.uRentowePercentage) / 100;
-    const uChorobowe = (contributionBasis * socialContributions.uChorobowePercentage) / 100;
-    const uWypadkowe = (contributionBasis * socialContributions.uWypadkowePercentage) / 100;
-    const funduszPracy = (contributionBasis * socialContributions.funduszPracyPercentage) / 100;
-    const monthlySocialContributions = (uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy)
-    const yearlySocialContributions = monthlySocialContributions * 12;
+    let socialContributionsValue = calculateSocialContributions(socialContributions)
 
     // Składka zdrowotna
     const healthContributionsValue = (netIncome * healthCountributions.flatTax.valuePercentage) / 100;
 
-    const taxBase = (netIncome - yearlySocialContributions - healthContributionsValue);
+    const taxBase = (netIncome - socialContributionsValue.yearlySocialContributions - healthContributionsValue);
 
     if (taxBase > 0) {
         tax = taxBase * flatTax;
@@ -54,7 +47,7 @@ const CalculateFlatTax = ({ data }) => {
         <>
             <div className="tax-result__box">
                 <TaxResult tax={tax}
-                    socialContributions={yearlySocialContributions}
+                    socialContributions={socialContributionsValue.yearlySocialContributions}
                     healthContribution={healthContributionsValue}
                 />
                 <div className="tax-steps">
@@ -70,19 +63,19 @@ const CalculateFlatTax = ({ data }) => {
                         <TaxStep name="Roczny przychód netto:"
                              calculations={`${taxData.income} zł - ${taxData.costsOfIncome} zł = ${netIncome} zł`} />
                         <TaxStep name="Ubezpieczenie emerytalne:" 
-                             calculations={`${contributionBasis} zł × ${socialContributions.uEmerytalnePercentage} % = ${uEmerytalne} zł`} />
+                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uEmerytalnePercentage} % = ${socialContributionsValue.uEmerytalne} zł`} />
                         <TaxStep name="Ubezpieczenie rentowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${uRentowe} zł`} />
+                                calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${socialContributionsValue.uRentowe} zł`} />
                         <TaxStep name="Ubezpieczenie chorobowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uChorobowePercentage} % = ${uChorobowe} zł`} />
+                                calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uChorobowePercentage} % = ${socialContributionsValue.uChorobowe} zł`} />
                         <TaxStep name="Ubezpieczenie wypadkowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uWypadkowePercentage} % = ${uWypadkowe} zł`} />
+                                calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uWypadkowePercentage} % = ${socialContributionsValue.uWypadkowe} zł`} />
                         <TaxStep name="Składka na fundusz pracy:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.funduszPracyPercentage} % = ${funduszPracy} zł`} />
+                                calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.funduszPracyPercentage} % = ${socialContributionsValue.funduszPracy} zł`} />
                         <TaxStep name="Miesięczna suma składek społecznych:" 
-                                calculations={`${monthlySocialContributions} zł`} />
+                                calculations={`${socialContributionsValue.monthlySocialContributions} zł`} />
                         <TaxStep name="Roczna suma składek społecznych:" 
-                                calculations={`${monthlySocialContributions}  ${yearlySocialContributions} zł`} />
+                                calculations={`${socialContributionsValue.monthlySocialContributions} zł × 12 = ${socialContributionsValue.yearlySocialContributions} zł`} />
                         <TaxStep name="Składka zdrowotna:" 
                              calculations={`${netIncome} zł × 9% = ${healthContributionsValue} zł`} />
                         <TaxStep name="Podstawa opodatkowania:" 

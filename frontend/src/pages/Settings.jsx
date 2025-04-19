@@ -67,6 +67,11 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
             setError('Ta stawka już istnieje');
             return;
         }
+
+        if(rateValue < 0){
+            setError('Stawka nie może być mniejsza od zera');
+            return;
+        }
         
         setRates([...rates, rateValue].sort((a, b) => a - b));
         setNewRate('');
@@ -493,7 +498,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                     </div>
                     <div>
                         <p><b>Ulga prorodzinna:</b></p>
-                        <ul>
+                        <ul className="tax-breaks__list">
                             <li>
                                 <span>jedno dziecko</span>
                                 <input type="number" className="settings__input" step="0.01"

@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
-import { calculateSocialContributions } from "../functions/calculateSocialContributions";
-import { calculateHealthContributionForLumpSumTax } from "../functions/calculateHealthContributionForLumpSumTax";
+import { calculateSocialContributions } from "../utils/calculateSocialContributions";
+import { calculateHealthContributionForLumpSumTax } from "../utils/calculateHealthContributionForLumpSumTax";
+import { formatPLN } from "../utils/formatPLN";
 import TaxStep from "./TaxStep";
 import TaxResult from "./TaxResult";
 
@@ -10,9 +11,9 @@ const CalculateLumpSumTax = ({data}) => {
 
     const income = data.taxData.income;
     const lumpSumValue = data.taxData.selectedLumpSumValue;
-    const {taxParameters} = data;
+    const { taxParameters } = data;
     
-    const {socialContributions} = taxParameters;
+    const { socialContributions } = taxParameters;
     const avgIncomeLastQuaterPrevYear = taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
     const healthCountributions = taxParameters.healthCountributions.lumpSumTax;
     
@@ -28,7 +29,11 @@ const CalculateLumpSumTax = ({data}) => {
 
     const taxBase = income - socialContributionsValue.yearlySocialContributions - (healthContributionsValue.yearlyHealthContributionsValue / 2);
 
-    tax = (taxBase * lumpSumValue) / 100;
+    if(taxBase > 0){
+        tax = (taxBase * lumpSumValue) / 100;
+    } else {
+        tax = 0;
+    }
 
     return (
         <div className="tax-result__box">
@@ -47,9 +52,9 @@ const CalculateLumpSumTax = ({data}) => {
                     <TaxStep name="Stawka ryczałtu:"
                              calculations={`${lumpSumValue}%`} />
                     <TaxStep name="Ubezpieczenie emerytalne:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uEmerytalnePercentage} % = ${socialContributionsValue.uEmerytalne} zł`} />
+                             calculations={`${socialContributionsValue.contributionBasis.toFixed(2)} zł × ${socialContributions.uEmerytalnePercentage} % = ${socialContributionsValue.uEmerytalne.toFixed(2)} zł`} />
                     <TaxStep name="Ubezpieczenie rentowe:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${socialContributionsValue.uRentowe} zł`} />
+                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${formatPLN(socialContributionsValue.uRentowe)}`} />
                     <TaxStep name="Ubezpieczenie chorobowe:" 
                              calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uChorobowePercentage} % = ${socialContributionsValue.uChorobowe} zł`} />
                     <TaxStep name="Ubezpieczenie wypadkowe:" 

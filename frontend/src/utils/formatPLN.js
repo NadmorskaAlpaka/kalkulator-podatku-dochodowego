@@ -1,0 +1,1 @@
+export const formatPLN = (value) => `${Number(value).toFixed(2)} zł`;
