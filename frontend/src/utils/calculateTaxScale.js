@@ -15,9 +15,9 @@ export const calculateTaxScale = (taxData,taxParameters,socialContributions) => 
     if(!isTaxFree){
 
         // Progi podatkowe
-        if(taxBase <= taxScale.firstMaxIncome){
+        if(taxBase < taxScale.firstMaxIncome){
             tax = ((taxBase * taxScale.firstPercentage) / 100) - 3600;
-        } else if(taxBase > taxScale.secondMinIncome){
+        } else if(taxBase >= taxScale.secondMinIncome){
             tax = (((taxScale.firstMaxIncome * taxScale.firstPercentage) / 100) - 3600) + ((taxBase - taxScale.firstMaxIncome) * taxScale.secondPercentage) / 100; 
         }
 

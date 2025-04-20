@@ -16,9 +16,9 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
     const taxBasePerSpouse = totalTaxBase / 2;
 
     const isTaxFree = taxParameters.taxFreeAmout > taxBasePerSpouse ;
+    let taxPerSpouse = 0;
 
     if(!isTaxFree){
-        let taxPerSpouse = 0;
         // Progi podatkowe
         if(taxBasePerSpouse <= taxScale.firstMaxIncome){
             taxPerSpouse = ((taxBasePerSpouse * taxScale.firstPercentage) / 100) - 3600;
@@ -53,6 +53,7 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
         totalTaxBase,
         taxBasePerSpouse,
         isTaxFree,
+        taxPerSpouse,
         tax,
         daninaValue,
     }

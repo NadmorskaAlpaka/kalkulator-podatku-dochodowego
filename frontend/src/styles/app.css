@@ -137,6 +137,12 @@ img{
     color: var(--red);
 }
 
+hr{
+    border: none;
+    height: 2px;
+    background-color: var(--light-gray);
+}
+
 @media screen and (max-width: 768px) {
     .text{
         font-size: 14px;
