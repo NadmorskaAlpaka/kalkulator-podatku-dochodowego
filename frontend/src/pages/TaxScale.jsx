@@ -26,6 +26,7 @@ const TaxScale = ({taxParameters}) => {
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
+    const [bussinesOwner, setBussinesOwner] = useState(false);
     const [spouseIncome, setSpouseIncome] = useState(0);
 
     const [internetValue, setInternetValue] = useState(0);
@@ -125,6 +126,9 @@ const TaxScale = ({taxParameters}) => {
                 <PathHead title="Rozliczam się według skali podatkowej" 
                           text="Coraz bliżej! Wypełnij poniższe pola i podaj wymagane informacje, abyśmy mogli obliczyć twój podatek."/>
                 <div className="tax-scale__box">
+                    <ToggleInput label="Prowadzisz działalność gospodarczą?" 
+                                 handleChange={(e) => handleCheckbox(e,setBussinesOwner)}
+                    />
                     <TaxInput label="Twoj roczny przychód brutto" type="number" value={income}
                               handleChange={(e) => handleChange(e,setIncome)} 
                     />
