@@ -1,60 +1,37 @@
 import React, { useState } from "react";
 import TaxResult from "./TaxResult";
 import TaxStep from "./TaxStep";
+import { calculateSocialContributions } from "../utils/calculateSocialContributions";
+import { calculateHealtContributionForFlatTax } from "../utils/calculateHealtContributionForFlatTax";
+import { calculateFlatTax } from "../utils/calculateFlatTax";
+import { formatPLN } from "../utils/formatPLN";
 
 const CalculateFlatTax = ({ data }) => {
 
-    // --- \/ - DATA PREPARATION - \/ --- //
-
     const { taxData } = data;
     const { taxParameters } = data;
-
     const { socialContributions } = taxParameters;
-    const { flatTax } = taxParameters;
     const { healthCountributions } = taxParameters;
-    const { danina } = taxParameters;
-
-    // --- /\ --------------- /\ --- //
 
     const [showSteps, setShowSteps] = useState(false);
 
-    let tax = 0;
     let taxBreaksValue = 0;
-    let daninaValue = 0
 
     const netIncome = (taxData.income - taxData.costsOfIncome);
 
     // Składka społeczna
-    const contributionBasis = socialContributions.minSocialContributionBasis;
-
-    const uEmerytalne = (contributionBasis * socialContributions.uEmerytalnePercentage) / 100;
-    const uRentowe = (contributionBasis * socialContributions.uRentowePercentage) / 100;
-    const uChorobowe = (contributionBasis * socialContributions.uChorobowePercentage) / 100;
-    const uWypadkowe = (contributionBasis * socialContributions.uWypadkowePercentage) / 100;
-    const funduszPracy = (contributionBasis * socialContributions.funduszPracyPercentage) / 100;
-    const monthlySocialContributions = (uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy)
-    const yearlySocialContributions = monthlySocialContributions * 12;
+    const socialContributionsValue = calculateSocialContributions(socialContributions);
 
     // Składka zdrowotna
-    const healthContributionsValue = (netIncome * healthCountributions.flatTax.valuePercentage) / 100;
+    const healthContributionsValue = calculateHealtContributionForFlatTax(netIncome,healthCountributions);
 
-    const taxBase = (netIncome - yearlySocialContributions - healthContributionsValue);
-
-    if (taxBase > 0) {
-        tax = taxBase * flatTax;
-    } else {
-        tax = 0;
-    }
-
-    if (netIncome > danina.minIncome) {
-        daninaValue = ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
-    }
+    const flatTaxResult = calculateFlatTax(taxData,taxParameters,socialContributionsValue,healthContributionsValue);
 
     return (
         <>
             <div className="tax-result__box">
-                <TaxResult tax={tax}
-                    socialContributions={yearlySocialContributions}
+                <TaxResult tax={flatTaxResult.tax}
+                    socialContributions={socialContributionsValue.yearlySocialContributions}
                     healthContribution={healthContributionsValue}
                 />
                 <div className="tax-steps">
@@ -63,35 +40,53 @@ const CalculateFlatTax = ({ data }) => {
                         <button className="cta">{showSteps ? "Zamknij" : "Zobacz"}</button>
                     </div>
                     <div className={`tax-steps__body animated-box ${showSteps ? "open" : "closed"}`}>
-                        <TaxStep name="Roczny przychód brutto:"
-                            calculations={`${taxData.income} zł`} />
+                        <p className="tax-step__heading">1. Dane podstawowe:</p>
+                        <TaxStep name="Roczny przychód:"
+                            calculations={`${formatPLN(taxData.income)}`} />
                         <TaxStep name="Roczne koszty uzyskania przychodu:"
-                            calculations={`${taxData.costsOfIncome} zł`} />
-                        <TaxStep name="Roczny przychód netto:"
-                             calculations={`${taxData.income} zł - ${taxData.costsOfIncome} zł = ${netIncome} zł`} />
+                            calculations={`${formatPLN(taxData.costsOfIncome)}`} />
+                        <TaxStep name="Roczny dochód:"
+                             calculations={`${formatPLN(taxData.income)} - ${formatPLN(taxData.costsOfIncome)} = ${formatPLN(flatTaxResult.netIncome)}`} />
+                        <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
                         <TaxStep name="Ubezpieczenie emerytalne:" 
-                             calculations={`${contributionBasis} zł × ${socialContributions.uEmerytalnePercentage} % = ${uEmerytalne} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
                         <TaxStep name="Ubezpieczenie rentowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${uRentowe} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uRentowePercentage} % = ${formatPLN(socialContributionsValue.uRentowe)}`} />
                         <TaxStep name="Ubezpieczenie chorobowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uChorobowePercentage} % = ${uChorobowe} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uChorobowePercentage} % = ${formatPLN(socialContributionsValue.uChorobowe)}`} />
                         <TaxStep name="Ubezpieczenie wypadkowe:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.uWypadkowePercentage} % = ${uWypadkowe} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uWypadkowePercentage} % = ${formatPLN(socialContributionsValue.uWypadkowe)}`} />
                         <TaxStep name="Składka na fundusz pracy:" 
-                                calculations={`${contributionBasis} zł × ${socialContributions.funduszPracyPercentage} % = ${funduszPracy} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.funduszPracyPercentage} % = ${formatPLN(socialContributionsValue.funduszPracy)}`} />
                         <TaxStep name="Miesięczna suma składek społecznych:" 
-                                calculations={`${monthlySocialContributions} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)}`} />
                         <TaxStep name="Roczna suma składek społecznych:" 
-                                calculations={`${monthlySocialContributions}  ${yearlySocialContributions} zł`} />
+                                calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
+                        <p className="tax-step__heading">3. Obliczanie składki zdrowotnej:</p> 
                         <TaxStep name="Składka zdrowotna:" 
-                             calculations={`${netIncome} zł × 9% = ${healthContributionsValue} zł`} />
-                        <TaxStep name="Podstawa opodatkowania:" 
-                             calculations={`${taxBase} zł`} />
-                        <TaxStep name="Należny podatek:" 
-                             calculations={`${tax} zł`} />
+                             calculations={`${formatPLN(flatTaxResult.netIncome)} zł × ${healthCountributions.flatTax.valuePercentage}% = ${formatPLN(healthContributionsValue)} zł`} />
                         {
-                            daninaValue > 0 ? <TaxStep name="Danina solidatnościowa:" 
-                                calculations={`(${netIncome} zł - 1000000 zł) * 4% = ${daninaValue} zł`} /> : <></>
+                            healthContributionsValue > 12900 && 
+                            <TaxStep name="Limit odliczenia składki zdrowotnej:" 
+                                 calculations={`12900 zł ponieważ ${formatPLN(healthContributionsValue)} > 12900 zł`} />
+                        }
+                        <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
+                        <TaxStep name="Podstawa opodatkowania:" 
+                             calculations={`${formatPLN(flatTaxResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} - ${formatPLN(flatTaxResult.healthContriubutionWithLimit)} = ${formatPLN(flatTaxResult.taxBase)}`} />
+                        <p className="tax-step__heading">5. Obliczenie podatku:</p>
+                        <TaxStep name="Obliczenie podatku:" 
+                             calculations={`${formatPLN(flatTaxResult.taxBase)} × ${taxParameters.flatTax} % = ${formatPLN(flatTaxResult.tax)}`} />  
+                        <TaxStep name="Należny podatek:" 
+                             calculations={`${formatPLN(flatTaxResult.tax)}`} />
+                        {
+                            flatTaxResult.daninaValue > 0 ? 
+                            <>
+                                <p className="tax-step__heading">7. Obliczenie daniny solidarnościowej:</p>
+                                <TaxStep name="Danina solidatnościowa:" 
+                                    calculations={`(${flatTaxResult.netIncome} zł - 1000000 zł) * 4% = ${flatTaxResult.daninaValue} zł`} />
+                            </>
+                            :
+                            <></>
                         }
                     </div>
                 </div>

@@ -23,6 +23,7 @@ const LumpSumTax = ({taxParameters}) => {
 
     useEffect(() => {
         console.log("Ryczałt", taxParameters);
+        console.log("Income", income);
         console.log("stawka", selectedLumpSumValue)
     }, [income,selectedLumpSumValue])
 
@@ -32,6 +33,11 @@ const LumpSumTax = ({taxParameters}) => {
 
         if(income <= 0){
             errorMessage.push("Przychód musi być większy od zera.");
+            error = true;
+        }
+
+        if(selectedLumpSumValue <= 0){
+            errorMessage.push("Wybierz stawkę opodatkowania.");
             error = true;
         }
 
