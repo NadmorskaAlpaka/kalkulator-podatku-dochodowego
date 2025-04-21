@@ -1,43 +1,29 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import { calculateSocialContributions } from "../utils/calculateSocialContributions";
 import { calculateHealthContributionForLumpSumTax } from "../utils/calculateHealthContributionForLumpSumTax";
+import { calculateLumpSumTax } from "../utils/calculateLumpSumTax";
 import { formatPLN } from "../utils/formatPLN";
 import TaxStep from "./TaxStep";
 import TaxResult from "./TaxResult";
 
 const CalculateLumpSumTax = ({data}) => {
 
-    // --- \/ - DATA PREPARATION - \/ --- //
-
     const income = data.taxData.income;
-    const lumpSumValue = data.taxData.selectedLumpSumValue;
-    const { taxParameters } = data;
-    
-    const { socialContributions } = taxParameters;
-    const avgIncomeLastQuaterPrevYear = taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
-    const healthCountributions = taxParameters.healthCountributions.lumpSumTax;
-    
-    // --- /\ --------------- /\ --- //
+    const socialContributions = data.taxParameters.socialContributions;
+    const avgIncomeLastQuaterPrevYear = data.taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
+    const healthCountributions = data.taxParameters.healthCountributions.lumpSumTax;
 
     const [showSteps, setShowSteps] = useState(false);
 
-    let tax = 0;
-
-    let socialContributionsValue = calculateSocialContributions(socialContributions)
-
-    let healthContributionsValue = calculateHealthContributionForLumpSumTax(income,healthCountributions,avgIncomeLastQuaterPrevYear);
-
-    const taxBase = income - socialContributionsValue.yearlySocialContributions - (healthContributionsValue.yearlyHealthContributionsValue / 2);
-
-    if(taxBase > 0){
-        tax = (taxBase * lumpSumValue) / 100;
-    } else {
-        tax = 0;
-    }
+    const socialContributionsValue = calculateSocialContributions(socialContributions)
+    
+    const healthContributionsValue = calculateHealthContributionForLumpSumTax(income,healthCountributions,avgIncomeLastQuaterPrevYear);
+    
+    const lumpSumTaxResult = calculateLumpSumTax(data,socialContributionsValue,healthContributionsValue)
 
     return (
         <div className="tax-result__box">
-            <TaxResult tax={tax} 
+            <TaxResult tax={lumpSumTaxResult.tax} 
                 socialContributions={socialContributionsValue.yearlySocialContributions}
                 healthContribution={healthContributionsValue.yearlyHealthContributionsValue}
             />
@@ -47,63 +33,70 @@ const CalculateLumpSumTax = ({data}) => {
                     <button className="cta">{showSteps ? "Zamknij" : "Zobacz"}</button>
                 </div>
                 <div className={`tax-steps__body animated-box ${showSteps ? "open" : "closed"}`}>
+                    <p className="tax-step__heading">1. Dane podstawowe:</p>
                     <TaxStep name="Roczny przychód:"
                              calculations={`${income} zł`} />
                     <TaxStep name="Stawka ryczałtu:"
-                             calculations={`${lumpSumValue}%`} />
+                             calculations={`${lumpSumTaxResult.lumpSumValue}%`} />
+                    <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
                     <TaxStep name="Ubezpieczenie emerytalne:" 
-                             calculations={`${socialContributionsValue.contributionBasis.toFixed(2)} zł × ${socialContributions.uEmerytalnePercentage} % = ${socialContributionsValue.uEmerytalne.toFixed(2)} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
                     <TaxStep name="Ubezpieczenie rentowe:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uRentowePercentage} % = ${formatPLN(socialContributionsValue.uRentowe)}`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uRentowePercentage} % = ${formatPLN(socialContributionsValue.uRentowe)}`} />
                     <TaxStep name="Ubezpieczenie chorobowe:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uChorobowePercentage} % = ${socialContributionsValue.uChorobowe} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uChorobowePercentage} % = ${formatPLN(socialContributionsValue.uChorobowe)}`} />
                     <TaxStep name="Ubezpieczenie wypadkowe:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.uWypadkowePercentage} % = ${socialContributionsValue.uWypadkowe} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uWypadkowePercentage} % = ${formatPLN(socialContributionsValue.uWypadkowe)}`} />
                     <TaxStep name="Składka na fundusz pracy:" 
-                             calculations={`${socialContributionsValue.contributionBasis} zł × ${socialContributions.funduszPracyPercentage} % = ${socialContributionsValue.funduszPracy} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.funduszPracyPercentage} % = ${formatPLN(socialContributionsValue.funduszPracy)}`} />
                     <TaxStep name="Miesięczna suma składek społecznych:" 
-                             calculations={`${socialContributionsValue.monthlySocialContributions} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)}`} />
                     <TaxStep name="Roczna suma składek społecznych:" 
-                             calculations={`${socialContributionsValue.monthlySocialContributions} zł × 12 = ${socialContributionsValue.yearlySocialContributions} zł`} />
+                             calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
+                    <p className="tax-step__heading">3. Obliczanie składki zdrowotnej:</p> 
                     { income < healthCountributions.small.maxIncome ? 
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${avgIncomeLastQuaterPrevYear} zł × ${healthCountributions.small.basisPercentage}%  = ${healthContributionsValue.healthContributionBasis} zł` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.small.basisPercentage}% = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${healthContributionsValue.healthContributionBasis} zł × ${healthCountributions.small.valuePercentage}%  = ${healthContributionsValue.monthlyHealthContributionsValue} zł` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.small.valuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
                     { (income >= healthCountributions.small.maxIncome && income <= healthCountributions.medium.maxIncome) ?
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${avgIncomeLastQuaterPrevYear} zł × ${healthCountributions.medium.basisPercentage}%  = ${healthContributionsValue.healthContributionBasis} zł` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.medium.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${healthContributionsValue.healthContributionBasis} zł × ${healthCountributions.medium.valuePercentage}%  = ${healthContributionsValue.monthlyHealthContributionsValue} zł` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.medium.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
                     { income > healthCountributions.big.minIncome ?
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${avgIncomeLastQuaterPrevYear} zł × ${healthCountributions.big.basisPercentage}%  = ${healthContributionsValue.healthContributionBasis} zł` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.big.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${healthContributionsValue.healthContributionBasis} zł × ${healthCountributions.big.valuePercentage}%  = ${healthContributionsValue.monthlyHealthContributionsValue} zł` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.big.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
                     <TaxStep name="Miesięczna składka zdrowotna:" 
-                             calculations={`${healthContributionsValue.monthlyHealthContributionsValue} zł`} />
+                             calculations={`${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}`} />
                     <TaxStep name="Roczna składka zdrowotna:" 
-                             calculations={`${healthContributionsValue.yearlyHealthContributionsValue} zł`} />
+                             calculations={`${formatPLN(healthContributionsValue.yearlyHealthContributionsValue)}`} />
+                    <TaxStep name="Limit odliczenia składki zdrowotnej" 
+                             calculations={`${formatPLN(healthContributionsValue.yearlyHealthContributionsValue)} / 2 = ${formatPLN(lumpSumTaxResult.limitHealtContribution)}`} />
+                    <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
                     <TaxStep name="Obliczenie podstawy opodatkowania:" 
-                             calculations={`${income} zł - ${socialContributionsValue.yearlySocialContributions} zł - (${healthContributionsValue.yearlyHealthContributionsValue} /2) = ${taxBase} zł`} />
+                             calculations={`${formatPLN(income)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} - ${formatPLN(lumpSumTaxResult.limitHealtContribution)} = ${formatPLN(lumpSumTaxResult.taxBase)}`} />
                     <TaxStep name="Podstawa opodatkowania:" 
-                             calculations={`${taxBase} zł`} />
+                             calculations={`${formatPLN(lumpSumTaxResult.taxBase)}`} />
+                    <p className="tax-step__heading">5. Obliczenie podatku:</p>
                     <TaxStep name="Obliczenie podatku:" 
-                             calculations={`${taxBase} zł * ${lumpSumValue}% = ${tax} zł`} />
+                             calculations={`${formatPLN(lumpSumTaxResult.taxBase)} * ${lumpSumTaxResult.lumpSumValue}% = ${formatPLN(lumpSumTaxResult.tax)}`} />
                     <TaxStep name="Należny podatek:" 
-                             calculations={`${tax} zł`} />
+                             calculations={`${formatPLN(lumpSumTaxResult.tax)}`} />
                 </div>
             </div>
         </div>
