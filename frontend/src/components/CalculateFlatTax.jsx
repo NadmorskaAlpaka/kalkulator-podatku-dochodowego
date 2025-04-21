@@ -25,6 +25,7 @@ const CalculateFlatTax = ({ data }) => {
     // Składka zdrowotna
     const healthContributionsValue = calculateHealtContributionForFlatTax(netIncome,healthCountributions);
 
+    // Wyniki obliczeń podatku
     const flatTaxResult = calculateFlatTax(taxData,taxParameters,socialContributionsValue,healthContributionsValue);
 
     return (
