@@ -5,7 +5,7 @@ import PathHead from "../components/PathHead";
 import CalculateTaxScale from "../components/CalculateTaxScale";
 import CalculateTaxScaleWithSpouse from "../components/CalculateTaxScaleWithSpouse";
 import CalculateTaxScaleForYouth from "../components/CalculateTaxScaleForYouth";
-import CalculateTaxCompare from "../components/CalculateTaxCompare";
+import DisplayTaxComparison from "../components/DisplayTaxComparison";
 import CalculateFlatTax from "../components/CalculateFlatTax";
 import CalculateLumpSumTax from "../components/CalculateLumpSumTax";
 
@@ -28,7 +28,7 @@ const Tax = () => {
                 {(data.taxType === "skala podatkowa" && !data.taxData.taxWithSpous && data.taxData.taxBreaks.youth) && <CalculateTaxScaleForYouth data={data} />}
                 {data.taxType === "ryczałt" && <CalculateLumpSumTax data={data} />}
                 {data.taxType === "podatek liniowy" && <CalculateFlatTax data={data} />}
-                {data.taxType === "porównanie opodatkowania" && <CalculateTaxCompare data={data} />}
+                {data.taxType === "porównanie opodatkowania" && <DisplayTaxComparison data={data} />}
             </div>
         </section>
     )

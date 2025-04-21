@@ -1,5 +1,6 @@
 #lump-sum{
     margin-bottom: 44px;
+    min-height: calc(100vh - 60px - 275px);
 }
 
 .lump-sum__box{
