@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/displayTaxComparison.css";
 import { calculateSocialContributions } from "../utils/calculateSocialContributions";
 import { calculateTaxScale } from "../utils/calculateTaxScale";
 import { calculateFlatTax } from "../utils/calculateFlatTax";
@@ -6,6 +7,7 @@ import { calculateLumpSumTax } from "../utils/calculateLumpSumTax";
 import { calculateHealthContributionsForTaxScale } from "../utils/calculateHealthContributionsForTaxScale";
 import { calculateHealtContributionForFlatTax } from "../utils/calculateHealtContributionForFlatTax";
 import { calculateHealthContributionForLumpSumTax } from "../utils/calculateHealthContributionForLumpSumTax";
+import { formatPLN } from "../utils/formatPLN";
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const DisplayTaxComparison = ({data}) => {
@@ -37,27 +39,42 @@ const DisplayTaxComparison = ({data}) => {
     const charsData = [
         {
             name: 'Skala podatkowa',
-            tax: taxScaleResult.tax,
-            socialContributions: socialContributionsValue.yearlySocialContributions,
-            healthContributions: taxScaleHealthContribution,
+            tax: taxScaleResult.tax.toFixed(2),
+            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
+            healthContributions: taxScaleHealthContribution.toFixed(2),
         },
         {
             name: 'Podatek liniowy',
-            tax: flatTaxResult.tax,
-            socialContributions: socialContributionsValue.yearlySocialContributions,
-            healthContributions: flatTaxHealthContribution,
+            tax: flatTaxResult.tax.toFixed(2),
+            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
+            healthContributions: flatTaxHealthContribution.toFixed(2),
         },
         {
             name: 'Ryczałt',
-            tax: lumpSumTaxResult.tax,
-            socialContributions: socialContributionsValue.yearlySocialContributions,
-            healthContributions: lumpSumTaxHealthContribution.yearlyHealthContributionsValue,
+            tax: lumpSumTaxResult.tax.toFixed(2),
+            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
+            healthContributions: lumpSumTaxHealthContribution.yearlyHealthContributionsValue.toFixed(2),
         },
     ];
 
     return (
         <div className="tax-result__box">
-            <ResponsiveContainer width="100%" height="100%" minHeight="400px">
+            <div className="tax-info">
+                <div className="tax__box">
+                    <h2 className="tax__name">Roczny przychód:</h2>
+                    <p className="tax__value">{formatPLN(taxData.income)}</p>
+                </div>
+                <div className="tax__box">
+                    <h2 className="tax__name">Roczne koszty uzyskania przychodu:</h2>
+                    <p className="tax__value">{formatPLN(taxData.costsOfIncome)}</p>
+                </div>
+                <div className="tax__box">
+                    <h2 className="tax__name">Wybrana stawka ryczałtu:</h2>
+                    <p className="tax__value">{taxData.selectedLumpSumValue}%</p>
+                </div>
+            </div>
+            <h2 className="chart__header">Porównanie ogólne</h2>
+            <ResponsiveContainer className="chart">
                 <BarChart
                     width={500}
                     height={300}
@@ -90,8 +107,9 @@ const DisplayTaxComparison = ({data}) => {
                     <Bar dataKey="socialContributions" fill="#D9B88D" activeBar={<Rectangle fill="#D9B88D" stroke="#000000" />} />
                 </BarChart>
             </ResponsiveContainer>
-
-            <ResponsiveContainer width="100%" height="100%" minHeight="400px">
+            
+            <h2 className="chart__header">Porównanie podatku dochodowego</h2>
+            <ResponsiveContainer className="chart">
                 <BarChart
                     width={500}
                     height={300}
@@ -118,8 +136,9 @@ const DisplayTaxComparison = ({data}) => {
                     <Bar dataKey="tax" fill="#87A6B4" activeBar={<Rectangle fill="#87A6B4" stroke="#000000" />} />
                 </BarChart>
             </ResponsiveContainer>
-
-            <ResponsiveContainer width="100%" height="100%" minHeight="400px">
+            
+            <h2 className="chart__header">Porównanie składki zdrowotnej</h2>
+            <ResponsiveContainer className="chart">
                 <BarChart
                     width={500}
                     height={300}
@@ -146,8 +165,9 @@ const DisplayTaxComparison = ({data}) => {
                     <Bar dataKey="healthContributions" fill="#98b6b4" activeBar={<Rectangle fill="#98b6b4" stroke="#000000" />} />
                 </BarChart>
             </ResponsiveContainer>
-
-            <ResponsiveContainer width="100%" height="100%" minHeight="400px">
+            
+            <h2 className="chart__header">Porównanie składek na ubezpieczenie społeczne</h2>
+            <ResponsiveContainer className="chart">
                 <BarChart
                     width={500}
                     height={300}

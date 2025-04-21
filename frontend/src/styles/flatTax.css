@@ -1,5 +1,6 @@
 #flat-tax{
     margin-bottom: 44px;
+    min-height: calc(100vh - 60px - 275px);
 }
 
 .flat-tax__box{

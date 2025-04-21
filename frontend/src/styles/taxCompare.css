@@ -1,0 +1,8 @@
+#tax-compare{
+    min-height: calc(100vh - 60px - 275px);
+}
+
+#tax-compare .cta{
+    margin-top: 24px;
+    margin-bottom: 44px;
+}

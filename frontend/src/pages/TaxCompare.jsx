@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/taxCompare.css";
 import PathHead from "../components/PathHead";
 import TaxInput from "../components/TaxInput";
 import TaxInputSelect from "../components/TaxInputSelect";
