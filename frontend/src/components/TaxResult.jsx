@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/taxResult.css";
 
-const TaxResult = ({tax,socialContributions,healthContribution,taxWithSpouse,spouseHealthContribution}) => {
+const TaxResult = ({tax,socialContributions,healthContribution,taxWithSpouse,spouseHealthContributio}) => {
     return (
         <div className="tax-result">
             {

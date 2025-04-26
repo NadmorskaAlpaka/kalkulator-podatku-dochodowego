@@ -8,7 +8,7 @@ import TaxResult from "./TaxResult";
 import TaxStep from "./TaxStep";
 import ToggleInput from "./ToggleInput";
 
-const CalculateTaxScaleForYouth = ({data}) => {
+const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
 
     const {taxData} = data;
     const {taxParameters} = data;
@@ -20,47 +20,14 @@ const CalculateTaxScaleForYouth = ({data}) => {
     const [showSteps, setShowSteps] = useState(false);
     const [yearly,setYearly] = useState(false);
     
-    let socialContributionsValue;
-    let taxScaleResult;
-    let healthContributionsValue;
+    // Składka społeczna
+    let socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
 
-    if(taxData.contract === "zlecenie" && taxData.income <= 85528) {
-            // Składka społeczna
-        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
+    // Wyniki obliczeń podatku
+    const taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
 
-            // Wyniki obliczeń podatku
-        taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
-        
-            // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
-    } else if (taxData.contract === "praca" && taxData.income <= 85528) {
-        // Składka społeczna
-        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
-
-        // Wyniki obliczeń podatku
-        taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
-
-        // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
-    } else if (taxData.contract === "zlecenie" && taxData.income > 85528){
-                // Składka społeczna
-        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
-
-                // Wyniki obliczeń podatku
-        taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
-        
-                // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
-    } else if (taxData.contract === "praca" && taxData.income > 85528){
-                // Składka społeczna
-        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
-
-                // Wyniki obliczeń podatku
-        taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
-        
-                // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
-    }
+    // Składka zdrowotna
+    const healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
 
     // ulgi podatkowe
     const taxBreaksValue = 0;
@@ -71,7 +38,7 @@ const CalculateTaxScaleForYouth = ({data}) => {
 
     return (
         <div className="tax-result__box employee">
-            <p className="tax__header">Zatrudnienie na podstawie {taxData.contract === "praca" ? "umowy o pracę" : "umowy zlecenie"}</p>
+            <p className="tax__header">Zatrudnienie na podstawie umowy o pracę</p>
             <ToggleInput label="Pokaż w ujęciu rocznym" 
                                  handleChange={(e) => handleCheckbox(e,setYearly)}
             />
@@ -146,4 +113,4 @@ const CalculateTaxScaleForYouth = ({data}) => {
     )
 }
 
-export default CalculateTaxScaleForYouth;
+export default CalculateTaxScaleForEmployeeWithSpouse;

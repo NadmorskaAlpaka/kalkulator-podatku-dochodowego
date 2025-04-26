@@ -39,21 +39,21 @@ const DisplayTaxComparison = ({data}) => {
     const charsData = [
         {
             name: 'Skala podatkowa',
-            tax: taxScaleResult.tax.toFixed(2),
-            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
-            healthContributions: taxScaleHealthContribution.toFixed(2),
+            tax: parseFloat(taxScaleResult.tax.toFixed(2)),
+            socialContributions: parseFloat(socialContributionsValue.yearlySocialContributions.toFixed(2)),
+            healthContributions: parseFloat(taxScaleHealthContribution.toFixed(2)),
         },
         {
             name: 'Podatek liniowy',
-            tax: flatTaxResult.tax.toFixed(2),
-            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
-            healthContributions: flatTaxHealthContribution.toFixed(2),
+            tax: parseFloat(flatTaxResult.tax.toFixed(2)),
+            socialContributions: parseFloat(socialContributionsValue.yearlySocialContributions.toFixed(2)),
+            healthContributions: parseFloat(flatTaxHealthContribution.toFixed(2)),
         },
         {
             name: 'Ryczałt',
-            tax: lumpSumTaxResult.tax.toFixed(2),
-            socialContributions: socialContributionsValue.yearlySocialContributions.toFixed(2),
-            healthContributions: lumpSumTaxHealthContribution.yearlyHealthContributionsValue.toFixed(2),
+            tax: parseFloat(lumpSumTaxResult.tax.toFixed(2)),
+            socialContributions: parseFloat(socialContributionsValue.yearlySocialContributions.toFixed(2)),
+            healthContributions: parseFloat(lumpSumTaxHealthContribution.yearlyHealthContributionsValue.toFixed(2)),
         },
     ];
 
@@ -88,7 +88,7 @@ const DisplayTaxComparison = ({data}) => {
                 >
                     <CartesianGrid />
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]}/>
                     <Tooltip formatter={(value, name) => {
                         if (name === 'tax') return [value, 'Podatek dochodowy'];
                         if (name === 'socialContributions') return [value, 'Składki na ubezpieczenie społeczne'];
@@ -123,7 +123,7 @@ const DisplayTaxComparison = ({data}) => {
                 >
                     <CartesianGrid />
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]} />
                     <Tooltip formatter={(value, name) => {
                         if (name === 'tax') return [value, 'Podatek dochodowy'];
                         return [value, name];
@@ -152,7 +152,7 @@ const DisplayTaxComparison = ({data}) => {
                 >
                     <CartesianGrid />
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]} />
                     <Tooltip formatter={(value, name) => {
                         if (name === 'healthContributions') return [value, 'Składka zdrowotna'];
                         return [value, name];
@@ -181,7 +181,7 @@ const DisplayTaxComparison = ({data}) => {
                 >
                     <CartesianGrid />
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]} />
                     <Tooltip formatter={(value, name) => {
                         if (name === 'socialContributions') return [value, 'Składki na ubezpieczenie społeczne'];
                         return [value, name];

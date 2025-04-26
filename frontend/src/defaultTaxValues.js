@@ -15,6 +15,11 @@ export const defaultValues = {
         uWypadkowePercentage: 1.67,
         funduszPracyPercentage: 2.45,
     },
+    employeeSocialContributions: {
+        uEmerytalnePercentage: 9.76,
+        uRentowePercentage: 1.50,
+        uChorobowePercentage: 2.45
+    },
     healthCountributions: {
         mimIncome: 4666,
         avgIncomeLastQuaterPrevYear: 8549.18,
@@ -26,7 +31,8 @@ export const defaultValues = {
         taxScale: {
             basisPercentage: 75,
             valuePercentage: 9,
-            minHealthCountributions: 314.96
+            minHealthCountributions: 314.96,
+            employeeValuePercentage: 9,
         },
         lumpSumTax: {
             small: {

@@ -75,3 +75,29 @@
   .slider.round:before {
     border-radius: 4px;
   }
+
+  .employee .switch {
+    margin-left: 12px;
+    margin-top: 0;
+    height: 26px;
+  }
+
+  .employee .switch__label {
+    font-size: 20px;
+  }
+
+  .employee .switch__box{
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 24px 0;
+  }
+
+  .employee .slider:before {
+    content: "";
+    bottom: 3px;
+    height: 20px;
+  }
+
+  .employee .switch__checkbox:checked + .slider:before {
+    content: "";
+  }
