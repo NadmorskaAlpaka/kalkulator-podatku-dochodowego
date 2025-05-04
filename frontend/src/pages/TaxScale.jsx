@@ -12,10 +12,10 @@ const TaxScale = ({taxParameters}) => {
 
     const [errorMessage, setErrorMessage] = useState([]);
     const [error, setError] = useState(false);
-
+    
     const [income, setIncome] = useState(0);
     const [costsOfIncome, setCostsOfIncome] = useState(0);
-    const [taxBreaks, setTaxBreaks] = useState({
+    const [taxBreaksStatus, setTaxBreaksStatus] = useState({
         internet: false,
         rehabilitation: false,
         child: false,
@@ -26,8 +26,8 @@ const TaxScale = ({taxParameters}) => {
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
-    const [bussinesOwner, setBussinesOwner] = useState(false);
     const [spouseIncome, setSpouseIncome] = useState(0);
+    const [contract, setContract] = useState("");
 
     const [internetValue, setInternetValue] = useState(0);
     const [rehabilitationValue, setrehabilitationValue] = useState(0);
@@ -44,8 +44,8 @@ const TaxScale = ({taxParameters}) => {
         setter(e.target.value)
     }
 
-    const handleTaxBreaks = (e) => {
-        setTaxBreaks((prev) => ({
+    const handleTaxBreaksStatus = (e) => {
+        setTaxBreaksStatus((prev) => ({
           ...prev,
           [e.target.name]: e.target.checked,
         }));
@@ -59,8 +59,9 @@ const TaxScale = ({taxParameters}) => {
         // console.log("Rozliczasz się wspólnie z małżonkiem?", taxWithSpous)
         // console.log("Roczny dochód małżonka", spouseIncome);
         // console.log(error);
+        console.log(contract);
         console.log("licza dzieci wpisywanie",childrenNumber)
-    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaks, error,childrenNumber])
+    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaksStatus, error,childrenNumber,contract])
 
     const validateInputs = () => {
         let error = false;
@@ -76,7 +77,7 @@ const TaxScale = ({taxParameters}) => {
             error = true;
         }
 
-        if(availableTaxBreaks && (!taxBreaks.internet && !taxBreaks.rehabilitation && !taxBreaks.child && ! taxBreaks.bloodDonation && !taxBreaks.newTech && !taxBreaks.youth && !taxBreaks.other)){
+        if(availableTaxBreaks && (!taxBreaksStatus.internet && !taxBreaksStatus.rehabilitation && !taxBreaksStatus.child && ! taxBreaksStatus.bloodDonation && !taxBreaksStatus.newTech && !taxBreaksStatus.youth && !taxBreaksStatus.other)){
             errorMessage.push("Wybierz ulgi podatkowke które Cie dotyczną.");
             error = true;
         }
@@ -95,12 +96,13 @@ const TaxScale = ({taxParameters}) => {
         const taxData = {
             income,
             costsOfIncome,
-            taxBreaks,
+            taxBreaksStatus,
             availableTaxBreaks,
             taxWithSpous,
             spouseIncome,
             internetValue,
             rehabilitationValue,
+            contract,
             childrenNumber: Number(childrenNumber),
             bloodLiters,
             newTechnologyValue,
@@ -126,53 +128,49 @@ const TaxScale = ({taxParameters}) => {
                 <PathHead title="Rozliczam się według skali podatkowej" 
                           text="Coraz bliżej! Wypełnij poniższe pola i podaj wymagane informacje, abyśmy mogli obliczyć twój podatek."/>
                 <div className="tax-scale__box">
-                    <ToggleInput label="Prowadzisz działalność gospodarczą?" 
-                                 handleChange={(e) => handleCheckbox(e,setBussinesOwner)}
-                    />
-                    <TaxInput label="Twoj roczny przychód brutto" type="number" value={income}
+                    <TaxInput label="Twoj roczny przychód" type="number" value={income}
                               handleChange={(e) => handleChange(e,setIncome)} 
                     />
-                    <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
-                              handleChange={(e) => handleChange(e,setCostsOfIncome)} 
-                    />
+                        <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
+                              handleChange={(e) => handleChange(e,setCostsOfIncome)} />
                     <ToggleInput label="Przysługują Ci ulgi podatkowe?" 
                                  handleChange={(e) => handleCheckbox(e,setAvailableTaxBreaks)}
                     />
                     <div className={`animated-box ${availableTaxBreaks ? "open" : "closed"}`}>
                         <p className="tax-scale__breaks">Wybierz ulgi podatkowe:</p>
-                        <Checkbox text="Ulga na internet" name="internet" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.internet ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga na internet" name="internet" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.internet ? "open" : "closed"}`}>
                             <TaxInput label="Koszty poniesione na Internet" type="number" value={internetValue}
                                     handleChange={(e) => handleChange(e,setInternetValue)} 
                             />
                         </div>
-                        <Checkbox text="Ulga rehabilitacyjna" name="rehabilitation" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.rehabilitation ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga rehabilitacyjna" name="rehabilitation" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.rehabilitation ? "open" : "closed"}`}>
                             <TaxInput label="Koszty poniesione na rehabilitacje" type="number" value={rehabilitationValue}
                                     handleChange={(e) => handleChange(e,setrehabilitationValue)} 
                             />
                         </div>
-                        <Checkbox text="Ulga na dziecko" name="child" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.child ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga na dziecko" name="child" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.child ? "open" : "closed"}`}>
                             <TaxInput label="Ilość dzieci" type="number" value={childrenNumber}
                                     handleChange={(e) => handleChange(e,setChildrenNumber)} 
                             />
                         </div>
-                        <Checkbox text="Ulga dla krwiodawców" name="bloodDonation" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.bloodDonation ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga dla krwiodawców" name="bloodDonation" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.bloodDonation ? "open" : "closed"}`}>
                             <TaxInput label="Ilość litrów krwi" type="number" value={bloodLiters}
                                     handleChange={(e) => handleChange(e,setBloodLiters)} 
                             />
                         </div>
-                        <Checkbox text="Ulga na nowe technologie" name="newTech" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.newTech ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga na nowe technologie" name="newTech" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.newTech ? "open" : "closed"}`}>
                             <TaxInput label="Koszty poniesione na nowe technologie" type="number" value={newTechnologyValue}
                                     handleChange={(e) => handleChange(e,setNewTechnologyValue)} 
                             />
                         </div>
-                        <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <Checkbox text="Inna ulga" name="other" handleChange={(e) => handleTaxBreaks(e)}/>
-                        <div className={`animated-box ${taxBreaks.other ? "open" : "closed"}`}>
+                        <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaksStatus(e)} />
+                        <Checkbox text="Inna ulga" name="other" handleChange={(e) => handleTaxBreaksStatus(e)}/>
+                        <div className={`animated-box ${taxBreaksStatus.other ? "open" : "closed"}`}>
                             <TaxInput label="Kwota innych ulg" type="number" value={otherTaxBreakValue}
                                     handleChange={(e) => handleChange(e,setOtherTaxBreakValue)} 
                             />

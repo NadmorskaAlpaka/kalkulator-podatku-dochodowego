@@ -8,6 +8,9 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
 
     const initialRates = taxParameters.lumpSumTax;
 
+    const [message, setMessage] = useState("");
+    const [showMessage, setShowMessage] = useState(false);
+
     const [flatTax, setFlatTax] = useState(taxParameters.flatTax);
     const [taxScale, setTaxScale] = useState(taxParameters.taxScale);
     const [rates, setRates] = useState(initialRates);
@@ -20,6 +23,10 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
     const [uChorobowePercentage,setUChorobowePercentage] = useState(taxParameters.socialContributions.uChorobowePercentage);
     const [uWypadkowePercentage,setUWypadkowePercentage] = useState(taxParameters.socialContributions.uWypadkowePercentage);
     const [funduszPracyPercentage,setFunduszPracyPercentage] = useState(taxParameters.socialContributions.funduszPracyPercentage);
+
+    const [employeeEmerytalnePercentage,setEmployeeEmerytalnePercentage] = useState(taxParameters.employeeSocialContributions.uEmerytalnePercentage);
+    const [employeeRentowePercentage,setEmployeeRentowePercentage] = useState(taxParameters.employeeSocialContributions.uRentowePercentage);
+    const [employeeChorobowePercentage,setEmployeeChorobowePercentage] = useState(taxParameters.employeeSocialContributions.uChorobowePercentage);
 
     const [mimIncome,setMimIncome] = useState(taxParameters.healthCountributions.mimIncome);
     const [avgIncomeLastQuaterPrevYear,setAvgIncomeLastQuaterPrevYear] = useState(taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear);
@@ -37,6 +44,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
     const [taxBreaksMoreThanFour,setTaxBreaksMoreThanFour] = useState(taxParameters.taxBreaks.children.moreThanFour);
     const [taxBreaksBloodDonation,setTaxBreaksBloodDonation] = useState(taxParameters.taxBreaks.bloodDonation);
     const [taxBreaksNewTechnologyPercentage,setTaxBreaksNewTechnologyPercentage] = useState(taxParameters.taxBreaks.newTechnologyPercentage);
+    const [taxBreaksYouth,setTaxBreaksYouth] = useState(taxParameters.taxBreaks.youth);
 
     const [danina,setDanina] = useState(taxParameters.danina);
 
@@ -99,6 +107,11 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                 uWypadkowePercentage: uWypadkowePercentage,
                 funduszPracyPercentage: funduszPracyPercentage,
             },
+            employeeSocialContributions: {
+                uEmerytalnePercentage: employeeEmerytalnePercentage,
+                uRentowePercentage: employeeRentowePercentage,
+                uChorobowePercentage: employeeChorobowePercentage
+            },
             healthCountributions: {
                 mimIncome: mimIncome,
                 avgIncomeLastQuaterPrevYear: avgIncomeLastQuaterPrevYear,
@@ -120,7 +133,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                     moreThanFour: taxBreaksMoreThanFour,
                 },
                 bloodDonation: taxBreaksBloodDonation,
-                newTechnologyPercentage: taxBreaksNewTechnologyPercentage
+                newTechnologyPercentage: taxBreaksNewTechnologyPercentage,
+                youth: taxBreaksYouth
             },
             danina: danina,
             taxFreeAmout: taxFreeAmout
@@ -128,6 +142,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         localStorage.setItem(localStorageKey, JSON.stringify(newValues));
         setTaxParameters(newValues);
         console.log("Save",newValues);
+        setMessage("Ustawienia zostały zapisane!");
+        setShowMessage(true);
     }
 
     const setDefaultValues = () => {
@@ -141,6 +157,9 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setUChorobowePercentage(defaultValues.socialContributions.uChorobowePercentage);
         setUWypadkowePercentage(defaultValues.socialContributions.uWypadkowePercentage);
         setFunduszPracyPercentage(defaultValues.socialContributions.funduszPracyPercentage);
+        setEmployeeEmerytalnePercentage(defaultValues.employeeSocialContributions.uEmerytalnePercentage);
+        setEmployeeRentowePercentage(defaultValues.employeeSocialContributions.uRentowePercentage);
+        setEmployeeChorobowePercentage(defaultValues.employeeSocialContributions.uChorobowePercentage);
         setMimIncome(defaultValues.healthCountributions.mimIncome);
         setHealtFlatTax(defaultValues.healthCountributions.flatTax);
         setHealtTaxScale(defaultValues.healthCountributions.taxScale);
@@ -156,8 +175,11 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setTaxBreaksMoreThanFour(defaultValues.taxBreaks.children.moreThanFour);
         setTaxBreaksBloodDonation(defaultValues.taxBreaks.bloodDonation);
         setTaxBreaksNewTechnologyPercentage(defaultValues.taxBreaks.newTechnologyPercentage);
+        setTaxBreaksYouth(defaultValues.taxBreaks.youth);
         setDanina(defaultValues.danina);
         setTaxFreeAmout(defaultValues.taxFreeAmout);
+        setMessage("Przywrócono ustawienia domyślne!");
+        setShowMessage(true);
     }
 
 //   useEffect(() => {
@@ -213,14 +235,27 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
 //     danina,
 //     taxFreeAmout,
 //     rates]);
+
+    useEffect(() => {
+    if (showMessage) {
+        const timer = setTimeout(() => {
+        setShowMessage(false);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }
+    }, [showMessage]);
         
     return (
         <section id="settings">
+            <div className={`message__box ${showMessage ? 'visible' : ''}`}>
+                <p className="message">{message}</p>
+            </div>
             <div className="container">
                 <PathHead title="Ustawienia"
                           text="Dostosuj parametry obliczeń w prosty sposób. Kliknij w liczbę aby ją edytować."   />
                 <div className="settings__box">
                     <h2 className="settings__category">Parametry składek ubezpieczenia społecznego</h2>
+                    <h3>W przypadku działalności gospodarczej</h3>
                     <div>
                         <span>Minimalna podstawa wymiaru składek na ubezpieczenia społeczne:</span>
                         <input className="settings__input" type="number" step="0.01"
@@ -269,6 +304,31 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                         />
                         <span>% podstawy wymiaru</span>
                     </div>
+                    <h3>W przypadku pracownika</h3>
+                    <div>
+                        <span>Składka na ubezpieczenie emerytalne:</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                               value={employeeEmerytalnePercentage}
+                               onChange={(e) => setEmployeeEmerytalnePercentage(parseFloat(e.target.value) || 0)}
+                        />
+                        <span>% wynagrodzenia brutto</span>
+                    </div>
+                    <div>
+                        <span>Składka na ubezpieczenia rentowe:</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                               value={employeeRentowePercentage}
+                               onChange={(e) => setEmployeeRentowePercentage(parseFloat(e.target.value) || 0)}
+                        />
+                        <span>% wynagrodzenia brutto</span>
+                    </div>
+                    <div>
+                        <span>Składka na ubezpieczenie chorobowe:</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                               value={employeeChorobowePercentage}
+                               onChange={(e) => setEmployeeChorobowePercentage(parseFloat(e.target.value) || 0)}
+                        />
+                        <span>% wynagrodzenia brutto</span>
+                    </div>
                     <h2 className="settings__category">Składka zdrowotna</h2>
                     <div>
                         <span>Minimalne wynagordzenie:</span>
@@ -287,7 +347,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 valuePercentage: parseFloat(e.target.value) || 0
                             }))}
                         />
-                        <span> % dochodu, minimalna składka wynosi</span>
+                        <span> % dochodu, minimalna miesięczna składka wynosi</span>
                         <input className="settings__input" type="number" step="0.01" 
                             value={healtFlatTax.minHealthCountributions}
                             onChange={(e) => setHealtFlatTax(prev => ({
@@ -306,7 +366,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 valuePercentage: parseFloat(e.target.value) || 0
                             }))}                              
                         />
-                        <span> % dochodu, minimalna składka wynosi</span>
+                        <span> % dochodu, minimalna miesięczna składka wynosi</span>
                         <input className="settings__input" type="number" step="0.01"
                             value={healtTaxScale.minHealthCountributions}
                             onChange={(e) => setHealtTaxScale(prev => ({
@@ -341,7 +401,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 ...prev,
                                 basisPercentage: parseFloat(e.target.value) || 0
                            }))}  
-                        /> % z przeciętnego wynagordzenia wynosi <b>{minimalnaPodstawaWymiaruSkladekRyczalt_1}</b>zł. 
+                        /> % z przeciętnego wynagordzenia wynosi <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_1}</span>zł. 
                         Wysokość miesięcznej składki zdrowotnej 
                         <input className="settings__input--small" type="number" step="0.01"
                             value={healtLumpSumTaxSmall.valuePercentage}
@@ -349,7 +409,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 ...prev,
                                 valuePercentage: parseFloat(e.target.value) || 0
                            }))}   
-                        /> % * <b>{minimalnaPodstawaWymiaruSkladekRyczalt_1}</b>zł wynosi <b>{minLumpSumTaxHealthContribution_1}</b>zł
+                        /> % * <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_1}</span> zł wynosi <span className="static-value">{minLumpSumTaxHealthContribution_1}</span>zł
                     </div>
                     <div>
                         Roczny przychód do 
@@ -367,7 +427,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                  ...prev,
                                  basisPercentage: parseFloat(e.target.value) || 0
                             }))}  
-                        /> % przeciętnego wynagordzenia <b>{minimalnaPodstawaWymiaruSkladekRyczalt_2}</b>zł. 
+                        /> % przeciętnego wynagordzenia <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_2}</span>zł. 
                         Wysokość miesięcznej składki zdrowotnej 
                         <input className="settings__input--small" type="number" step="0.01"
                             value={healtLumpSumTaxSmall.valuePercentage} 
@@ -375,25 +435,18 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 ...prev,
                                 valuePercentage: parseFloat(e.target.value) || 0
                            }))}                           
-                        /> % * <b>{minimalnaPodstawaWymiaruSkladekRyczalt_2}</b>zł wynosi <b>{minLumpSumTaxHealthContribution_2}</b>zł
+                        /> % * <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_2}</span>zł wynosi <span className="static-value">{minLumpSumTaxHealthContribution_2}</span>zł
                     </div>
                     <div>
-                        Roczny przychód od 
-                        <input className="settings__input" type="number" step="0.01" 
-                            value={healtLumpSumTaxBig.minIncome}
-                            onChange={(e) => setHealtLumpSumTaxBig(prev => ({
-                                ...prev,
-                                minIncome: parseFloat(e.target.value) || 0
-                            }))} 
-                        /> zł. 
-                        Podstawa naliczenia stawki zdrowotnej 
+                        Roczny przychód od <b className="static-value">{healtLumpSumTaxMedium.maxIncome}</b>
+                        zł Podstawa naliczenia stawki zdrowotnej 
                         <input className="settings__input--small" type="number" step="0.01"
                             value={healtLumpSumTaxBig.basisPercentage}
                             onChange={(e) => setHealtLumpSumTaxBig(prev => ({
                                  ...prev,
                                  basisPercentage: parseFloat(e.target.value) || 0
                             }))}   
-                        /> % przeciętnego wynagordzenia <b>{minimalnaPodstawaWymiaruSkladekRyczalt_3}</b>zł. 
+                        /> % przeciętnego wynagordzenia <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_3}</span>zł. 
                         Wysokość miesięcznej składki zdrowotnej 
                         <input className="settings__input--small" type="number" step="0.01"
                             value={healtLumpSumTaxBig.valuePercentage} 
@@ -401,16 +454,16 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                 ...prev,
                                 valuePercentage: parseFloat(e.target.value) || 0
                            }))}  
-                        /> % * <b>{minimalnaPodstawaWymiaruSkladekRyczalt_3}</b>zł wynosi <b>{minLumpSumTaxHealthContribution_3}</b>zł
+                        /> % * <span className="static-value">{minimalnaPodstawaWymiaruSkladekRyczalt_3}</span>zł wynosi <span className="static-value">{minLumpSumTaxHealthContribution_3}</span>zł
                     </div>
                     <h2 className="settings__category">Skala podatkowa</h2>
                     <div>
                         <span>Pierwszy próg: Dochód do </span>
                         <input className="settings__input" type="number" step="0.01"
-                            value={taxScale.firstMaxIncome}
+                            value={taxScale.incomeThreshold}
                             onChange={(e) => setTaxScale(prev => ({
                                 ...prev,
-                                firstMaxIncome: parseFloat(e.target.value) || 0
+                                incomeThreshold: parseFloat(e.target.value) || 0
                             }))}
                         />
                         <span>zł, stawka </span>
@@ -424,15 +477,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                         <span>%</span>
                     </div>
                     <div>
-                        <span>Drugi próg: Dochód od </span>
-                        <input className="settings__input" type="number" step="0.01"
-                            value={taxScale.secondMinIncome}
-                            onChange={(e) => setTaxScale(prev => ({
-                                ...prev,
-                                secondMinIncome: parseFloat(e.target.value) || 0
-                            }))}
-                        />
-                        <span>zł, stawka </span>
+                        <span>Drugi próg: Dochód od <b className="static-value">{taxScale.incomeThreshold}</b></span>
+                        <span> zł, stawka </span>
                         <input className="settings__input--small" type="number" step="0.01"
                             value={taxScale.secondPercentage}
                             onChange={(e) => setTaxScale(prev => ({
@@ -569,6 +615,14 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                             onChange={(e) => setTaxBreaksNewTechnologyPercentage(parseFloat(e.target.value) || 0)}
                         />
                         <span>% poniesionych wydatków</span>
+                    </div>
+                    <div>
+                        <span>Ulga dla młodych do</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                            value={taxBreaksYouth}
+                            onChange={(e) => setTaxBreaksYouth(parseFloat(e.target.value) || 0)}
+                        />
+                        <span>zł przychodu</span>
                     </div>
                     <h2 className="settings__category">Inne</h2>
                     <div>

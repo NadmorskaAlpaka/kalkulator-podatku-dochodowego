@@ -9,7 +9,7 @@ export const calculateHealthContributionForLumpSumTax = (income,healthCountribut
     } else if (income >= healthCountributions.small.maxIncome && income <= healthCountributions.medium.maxIncome){
         healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.medium.basisPercentage) / 100;
         monthlyHealthContributionsValue = (healthContributionBasis * healthCountributions.medium.valuePercentage) / 100;
-    } else if (income > healthCountributions.big.minIncome) {
+    } else if (income > healthCountributions.medium.maxIncome) {
         healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.big.basisPercentage) / 100;
         monthlyHealthContributionsValue = (healthContributionBasis * healthCountributions.big.valuePercentage) / 100;
     }

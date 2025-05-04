@@ -20,10 +20,10 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
 
     if(!isTaxFree){
         // Progi podatkowe
-        if(taxBasePerSpouse <= taxScale.firstMaxIncome){
+        if(taxBasePerSpouse <= taxScale.incomeThreshold){
             taxPerSpouse = ((taxBasePerSpouse * taxScale.firstPercentage) / 100) - 3600;
-        } else if(taxBasePerSpouse > taxScale.secondMinIncome){
-            taxPerSpouse = (((taxScale.firstMaxIncome * taxScale.firstPercentage) / 100) - 3600) + ((taxBasePerSpouse - taxScale.firstMaxIncome) * taxScale.secondPercentage) / 100; 
+        } else if(taxBasePerSpouse > taxScale.incomeThreshold){
+            taxPerSpouse = (((taxScale.incomeThreshold * taxScale.firstPercentage) / 100) - 3600) + ((taxBasePerSpouse - taxScale.incomeThreshold) * taxScale.secondPercentage) / 100; 
         }
 
         tax = taxPerSpouse * 2;

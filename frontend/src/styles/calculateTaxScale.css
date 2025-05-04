@@ -3,6 +3,11 @@
     flex-direction: column;
 }
 
+.tax__header{
+    font-weight: 700;
+    font-size: 24px;
+}
+
 .tax-steps{
     margin: 0 0 44px 0;
     display: flex;
@@ -34,4 +39,14 @@
     font-weight: 700;
     margin-top: 10px;
     text-decoration: underline;
+}
+
+.tax__contract div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tax__contract div label{
+    margin-left: 4px;
 }

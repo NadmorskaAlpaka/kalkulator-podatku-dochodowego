@@ -151,3 +151,28 @@
 .tax-breaks__list{
     margin-left: 20px;
 }
+
+.message__box {
+    top: 14px;
+    right: -400px; 
+    opacity: 0; 
+    position: fixed;
+    max-width: 350px;
+    width: 100%;
+    background-color: var(--green);
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 4px;
+    transition: right 0.5s ease, opacity 0.5s ease;
+}
+
+.message__box.visible {
+    right: 14px; 
+    opacity: 1;
+}
+
+.message {
+    font-size: 14px;
+    font-weight: 600;
+}
+

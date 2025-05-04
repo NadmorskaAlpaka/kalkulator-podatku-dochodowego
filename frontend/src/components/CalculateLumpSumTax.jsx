@@ -72,7 +72,7 @@ const CalculateLumpSumTax = ({data}) => {
                         </>
                         : null
                     }
-                    { income > healthCountributions.big.minIncome ?
+                    { income > healthCountributions.medium.maxIncome ?
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
                             calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.big.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />

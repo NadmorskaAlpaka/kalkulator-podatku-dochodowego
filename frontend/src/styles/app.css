@@ -143,6 +143,11 @@ hr{
     background-color: var(--light-gray);
 }
 
+.static-value{
+    font-size: 18px;
+    font-weight: 600;
+}
+
 @media screen and (max-width: 768px) {
     .text{
         font-size: 14px;
