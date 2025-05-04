@@ -2,9 +2,8 @@ export const defaultValues = {
     flatTax: 19,
     taxScale: {
         firstPercentage: 12,
-        firstMaxIncome: 120000,
-        secondPercentage: 32,
-        secondMinIncome: 120000
+        incomeThreshold: 120000,
+        secondPercentage: 32
     },
     lumpSumTax:[2,3,5.5,8.5,10,12,12.5,14,15,17],
     socialContributions: {
@@ -24,12 +23,10 @@ export const defaultValues = {
         mimIncome: 4666,
         avgIncomeLastQuaterPrevYear: 8549.18,
         flatTax: {
-            basisPercentage: 75,
             valuePercentage: 4.9,
             minHealthCountributions: 314.96
         },
         taxScale: {
-            basisPercentage: 75,
             valuePercentage: 9,
             minHealthCountributions: 314.96,
             employeeValuePercentage: 9,
@@ -46,7 +43,6 @@ export const defaultValues = {
                 valuePercentage: 9,
             },
             big: {
-                minIncome: 300000,
                 basisPercentage: 180,
                 valuePercentage: 9,
             }
@@ -69,7 +65,8 @@ export const defaultValues = {
             maxIncomPercentage: 6,
             value: 130
         },
-        newTechnologyPercentage: 50
+        newTechnologyPercentage: 50,
+        youth: 85528
     },
     danina: {
         valuePercentage: 4,

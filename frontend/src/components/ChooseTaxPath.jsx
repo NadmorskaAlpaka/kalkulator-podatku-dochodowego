@@ -1,9 +1,10 @@
 import React from 'react';
 import "../styles/chooseTaxPath.css"
-// import BussinesManImg from "../assets/bussines_man.png";
-// import Card from './Card';
+import BussinesManImg from "../assets/bussines_man_1.png";
+import Man from "../assets/man.png";
+import Card from './Card';
 import PathBody from "../components/PathBody";
-import bussinesMan from "../assets/bussines_man.png";
+import bussinesMan from "../assets/bussines_man_1.png";
 import bussinesWoman from "../assets/bussines_woman.png";
 import bussingesGrandpa from "../assets/bussines_grandpa.png";
 import bussinesTrio from "../assets/bussines_trio.png";
@@ -39,26 +40,26 @@ const ChooseTaxPath = () => {
     return (
         <section id="choose-tax-path">
             <div className='container'>
-                <div className='choose-tax-path__box'>
+                {/* <div className='choose-tax-path__box'>
                     <PathBody cards={taxPaths} header="Wybierz sposób opodatkowania"/>
-                </div>
-                {/* <h3 className='header'>Rozliczasz się jako?</h3>
+                </div> */}
+                <h3 className='header'>Rozliczasz się jako?</h3>
                 <div className='choose-tax-path__box'>
-                    <Card imgUrl={BussinesManImg}
-                          size="big" 
+                    <Card imgUrl={Man}
+                          size="small" 
                           imgAlt="Osoba nieprowadząca działalnośći" 
                           title="Osoba nieprowadząca działalnośći" 
                           path="/pracownik" 
                           buttonText="Wybierz"
                     />
                     <Card imgUrl={BussinesManImg}
-                          size="big"
+                          size="small"
                           imgAlt="Osoba prowadząca działalność" 
                           title="Osoba prowadząca działalność" 
                           path="/przedsiebiorca" 
                           buttonText="Wybierz" 
                     />
-                </div> */}
+                </div>
             </div>
         </section>
     )

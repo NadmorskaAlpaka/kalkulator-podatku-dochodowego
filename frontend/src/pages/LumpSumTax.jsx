@@ -71,7 +71,7 @@ const LumpSumTax = ({taxParameters}) => {
                 <PathHead title="Rozliczam się ryczałtem ewidencjonowanym"
                     text="Coraz bliżej! Wypełnij poniższe pola i podaj wymagane informacje, abyśmy mogli obliczyć twój podatek." />
                 <div className="lump-sum__box">
-                    <TaxInput label="Twoj roczny przychód brutto" type="number" value={income}
+                    <TaxInput label="Twoj roczny przychód" type="number" value={income}
                         handleChange={(e) => handleChange(e,setIncome)}
                     />
                     <TaxInputSelect label="Stawka opodatkowania" 

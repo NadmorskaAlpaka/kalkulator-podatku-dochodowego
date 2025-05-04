@@ -26,7 +26,6 @@ const TaxScale = ({taxParameters}) => {
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
-    const [bussinesOwner, setBussinesOwner] = useState(false);
     const [spouseIncome, setSpouseIncome] = useState(0);
     const [contract, setContract] = useState("");
 
@@ -88,11 +87,6 @@ const TaxScale = ({taxParameters}) => {
             error = true;
         }
 
-        if(!bussinesOwner && contract === ""){
-            errorMessage.push("Wybierz formę zatrudnienia");
-            error = true;
-        }
-
         setErrorMessage(errorMessage)
         setError(error);
         return error;
@@ -102,7 +96,6 @@ const TaxScale = ({taxParameters}) => {
         const taxData = {
             income,
             costsOfIncome,
-            bussinesOwner,
             taxBreaksStatus,
             availableTaxBreaks,
             taxWithSpous,
@@ -135,29 +128,11 @@ const TaxScale = ({taxParameters}) => {
                 <PathHead title="Rozliczam się według skali podatkowej" 
                           text="Coraz bliżej! Wypełnij poniższe pola i podaj wymagane informacje, abyśmy mogli obliczyć twój podatek."/>
                 <div className="tax-scale__box">
-                    <ToggleInput label="Prowadzisz działalność gospodarczą?" 
-                                 handleChange={(e) => handleCheckbox(e,setBussinesOwner)}
-                    />
-                    <div className={`animated-box ${!bussinesOwner ? "open" : "closed"}`}>
-                        <div className="tax__contract">
-                            <p className="tax-input__label">Wybierz formę zatrudnienia</p>
-                            <div>
-                                <input type="radio" value="praca" id="praca" name="contract" onChange={e => setContract(e.target.value)}/>
-                                <label htmlFor="praca">Umowa o pracę</label>
-                            </div>
-                            <div>
-                                <input type="radio" value="zlecenie" id="zlecenie" name="contract" onChange={e => setContract(e.target.value)}/>
-                                <label htmlFor="zlecenie">Umowa zlecenie</label>
-                            </div>
-                        </div>
-                    </div>
-                    <TaxInput label={bussinesOwner? "Twoj roczny przychód" : `Twoje roczne wynagrodzenie brutto`} type="number" value={income}
+                    <TaxInput label="Twoj roczny przychód" type="number" value={income}
                               handleChange={(e) => handleChange(e,setIncome)} 
                     />
-                    <div className={`animated-box ${bussinesOwner ? "open" : "closed"}`}>
                         <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
                               handleChange={(e) => handleChange(e,setCostsOfIncome)} />
-                    </div>
                     <ToggleInput label="Przysługują Ci ulgi podatkowe?" 
                                  handleChange={(e) => handleCheckbox(e,setAvailableTaxBreaks)}
                     />
@@ -193,7 +168,7 @@ const TaxScale = ({taxParameters}) => {
                                     handleChange={(e) => handleChange(e,setNewTechnologyValue)} 
                             />
                         </div>
-                        <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaksStatus(e)} disabled={bussinesOwner}/>
+                        <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaksStatus(e)} />
                         <Checkbox text="Inna ulga" name="other" handleChange={(e) => handleTaxBreaksStatus(e)}/>
                         <div className={`animated-box ${taxBreaksStatus.other ? "open" : "closed"}`}>
                             <TaxInput label="Kwota innych ulg" type="number" value={otherTaxBreakValue}

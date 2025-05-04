@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { calculateTaxScale } from "../utils/calculateTaxScale";
+import { employeeTaxScale } from "../utils/employeeTaxScale";
 import { calculateEmployeeHealthContributionsForTaxScale } from "../utils/calculateEmployeeHealthContributionsForTaxScale"
 import { calculateEmployeeSocialContributionsForTaxScale } from "../utils/calculateEmployeeSocialContributionsForTaxScale"
 import { formatPLN } from "../utils/formatPLN";
@@ -18,13 +18,13 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
     const {taxFreeAmout} = taxParameters;
 
     const [showSteps, setShowSteps] = useState(false);
-    const [yearly,setYearly] = useState(false);
+    const [monthly,setMonthly] = useState(false);
     
     // Składka społeczna
     let socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
 
     // Wyniki obliczeń podatku
-    const taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);
+    const taxScaleResult = employeeTaxScale(taxData,taxParameters,socialContributionsValue);
 
     // Składka zdrowotna
     const healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
@@ -38,21 +38,23 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
 
     return (
         <div className="tax-result__box employee">
-            <p className="tax__header">Zatrudnienie na podstawie umowy o pracę</p>
-            <ToggleInput label="Pokaż w ujęciu rocznym" 
-                                 handleChange={(e) => handleCheckbox(e,setYearly)}
+                        Zwykly pracownik z żoną
+            <p className="tax__header">Zatrudnienie na podstawie { taxData.contract === "praca" ? "umowy o pracę" : "umowy zlecenie"}</p>
+            <ToggleInput label="Podatek w skali miesiąca" 
+                         handleChange={(e) => handleCheckbox(e,setMonthly)}
             />
             {
-                yearly ?
-                <TaxResult tax={taxScaleResult.tax} 
-                socialContributions={socialContributionsValue.yearlySocialContributions}
-                healthContribution={healthContributionsValue.yearlyHealthContribution}
-                />
-                :
+                monthly ?
                 <TaxResult tax={taxScaleResult.tax / 12} 
                 socialContributions={socialContributionsValue.monthlySocialContributions}
                 healthContribution={healthContributionsValue.monthlyHealthContribution}
                 />
+                :
+                <TaxResult tax={taxScaleResult.tax} 
+                socialContributions={socialContributionsValue.yearlySocialContributions}
+                healthContribution={healthContributionsValue.yearlyHealthContribution}
+                />
+
             }
             <div className="tax-steps">
                 <div className="tax-steps__head" onClick={() => setShowSteps(!showSteps)}>
@@ -90,7 +92,7 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                     <TaxStep name="Wolny od podatku:" 
                              calculations={`${!taxScaleResult.isTaxFree ? "Nie" : "Tak"} ponieważ ${taxFreeAmout} zł ${!taxScaleResult.isTaxFree ? "<" : ">"} ${formatPLN(taxScaleResult.taxBase)}`} />
                     { 
-                        taxScaleResult.taxBase < taxParameters.taxScale.firstMaxIncome ? 
+                        taxScaleResult.taxBase < taxParameters.taxScale.incomeThreshold ? 
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
@@ -100,7 +102,7 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - 3600 zł) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.firstMaxIncome)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                    calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - 3600 zł) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
                         </>
                     }
                     <TaxStep name="Miesięczna zaliczka na podatek" 

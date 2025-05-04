@@ -17,6 +17,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import Tax from "./pages/Tax";
 import Settings from "./pages/Settings";
 import TaxCompare from "./pages/TaxCompare";
+import CompanyPath from "./pages/CompanyPath";
+import EmployeeTaxScale from "./pages/EmployeeTaxScale";
 
 const LOCAL_STORAGE_KEY = "taxParameters";
 
@@ -61,15 +63,17 @@ function App() {
             {/* <Route path="/logowanie" element={<Login />}/>
             <Route path="/rejestracja" element={<Register />} />
             <Route path="/pracownik" element={""} /> */}
+            <Route path="/pracownik" element={<EmployeeTaxScale taxParameters={taxParameters} />} />
+            <Route path="/przedsiebiorca" element={<CompanyPath taxParameters={taxParameters} />} /> 
             {/* <Route path="/przedsiebiorca" element={<CompanyPath />} />
             <Route path="/przedsiebiorca/skala-podatkowa" element={<TaxScale />} />
             <Route path="/przedsiebiorca/ryczalt-ewidencjonowany" element={<LumpSumTax />} />
             <Route path="/przedsiebiorca/podatek-liniowy" element={<FlatTax />} />
             <Route path="/przedsiebiorca/porownanie-opodatkowania" element={""} /> */}
-            <Route path="/skala-podatkowa" element={<TaxScale taxParameters={taxParameters}/>} />
-            <Route path="/ryczalt-ewidencjonowany" element={<LumpSumTax taxParameters={taxParameters}/>} />
-            <Route path="/podatek-liniowy" element={<FlatTax taxParameters={taxParameters}/>} />
-            <Route path="/porownanie-opodatkowania" element={<TaxCompare taxParameters={taxParameters}/>} />
+            <Route path="/przedsiebiorca/skala-podatkowa" element={<TaxScale taxParameters={taxParameters}/>} />
+            <Route path="/przedsiebiorca/ryczalt-ewidencjonowany" element={<LumpSumTax taxParameters={taxParameters}/>} />
+            <Route path="/przedsiebiorca/podatek-liniowy" element={<FlatTax taxParameters={taxParameters}/>} />
+            <Route path="/przedsiebiorca/porownanie-opodatkowania" element={<TaxCompare taxParameters={taxParameters}/>} />
             <Route path="/podatek" element={<Tax />} />
             {/* <Route path="/haslo" element={<ForgotPasssword />} /> */}
             <Route path="*" element={<NoPage />} />

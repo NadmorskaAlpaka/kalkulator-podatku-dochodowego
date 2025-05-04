@@ -1,4 +1,4 @@
-export const calculateTaxScale = (taxData,taxParameters,socialContributions) => {
+export const employeeTaxScale = (taxData,taxParameters,socialContributions) => {
 
     let tax = 0;
     let daninaValue = 0;
@@ -6,7 +6,7 @@ export const calculateTaxScale = (taxData,taxParameters,socialContributions) => 
     const {taxScale} = taxParameters;
     const {danina} = taxParameters;
 
-    const netIncome = (taxData.income - taxData.costsOfIncome);
+    const netIncome = (taxData.income - 3000);
 
     const taxBase = (netIncome - socialContributions.yearlySocialContributions);
 

@@ -1,4 +1,4 @@
-export const calculateEmployeeHealthContributionsForTaxScale = (taxData, healthCountributions,socialContributionsValue) => {
+export const calculateEmployeeHealthContributionsForTaxScale = (taxData, healthCountributions, socialContributionsValue) => {
     const yearlyHealthContribution = ((taxData.income - socialContributionsValue.yearlySocialContributions) * healthCountributions.taxScale.employeeValuePercentage) / 100;
     const monthlyHealthContribution = yearlyHealthContribution / 12;
 

@@ -70,10 +70,10 @@ const FlatTax = ({taxParameters}) => {
                 <PathHead title="Rozliczam się podatkiem liniowym"
                     text="Coraz bliżej! Wypełnij poniższe pola i podaj wymagane informacje, abyśmy mogli obliczyć twój podatek." />
                 <div className="flat-tax__box">
-                    <TaxInput label="Przychód" type="number" value={income}
+                    <TaxInput label="Przychód roczny przychód" type="number" value={income}
                         handleChange={(e) => handleChange(e, setIncome)}
                     />
-                    <TaxInput label="Koszty uzyskania przychodu" type="number" value={costsOfIncome}
+                    <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
                         handleChange={(e) => handleChange(e, setCostsOfIncome)}
                     />
                     { 
