@@ -1,4 +1,4 @@
-export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContributions) => {
+export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,socialContributions,spousSocialContributionsValue) => {
 
     let tax = 0;
     let daninaValue = 0;
@@ -10,7 +10,7 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
     const taxBase = (netIncome - socialContributions.yearlySocialContributions);
 
     const {spouseIncome} = taxData;
-    const spouseTaxBase = (spouseIncome - socialContributions.yearlySocialContributions);
+    const spouseTaxBase = (spouseIncome - spousSocialContributionsValue.yearlySocialContributions);
 
     const totalTaxBase = taxBase + spouseTaxBase;
     const taxBasePerSpouse = totalTaxBase / 2;

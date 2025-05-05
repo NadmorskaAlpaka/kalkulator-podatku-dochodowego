@@ -69,8 +69,8 @@ const EmployeeTaxScale = ({ taxParameters }) => {
             error = true;
         }
 
-        if (taxWithSpous && spouseIncome <= 0) {
-            errorMessage.push("Przychód małżonka musi być większy od zera.");
+        if (taxWithSpous && spouseIncome <= 0 && !taxBreaksStatus.youth) {
+            errorMessage.push("Wynagrodzenie małżonka musi być większe od zera.");
             error = true;
         }
 
@@ -81,18 +81,18 @@ const EmployeeTaxScale = ({ taxParameters }) => {
 
     const submit = () => {
         const taxData = {
-            income,
+            income: Number(income),
             taxBreaksStatus,
             availableTaxBreaks,
             taxWithSpous,
-            spouseIncome,
-            internetValue,
-            rehabilitationValue,
+            spouseIncome: Number(spouseIncome),
+            internetValue: Number(internetValue),
+            rehabilitationValue: Number(rehabilitationValue),
             contract,
             childrenNumber: Number(childrenNumber),
-            bloodLiters,
-            newTechnologyValue,
-            otherTaxBreakValue,
+            bloodLiters: Number(bloodLiters),
+            newTechnologyValue: Number(newTechnologyValue),
+            otherTaxBreakValue: Number(otherTaxBreakValue)
         }
 
         let data = {
@@ -146,15 +146,15 @@ const EmployeeTaxScale = ({ taxParameters }) => {
                             handleChange={(e) => handleChange(e, setrehabilitationValue)}
                         />
                     </div>
-                    <Checkbox text="Ulga na dziecko" name="child" handleChange={(e) => handleTaxBreaksStatus(e)} />
+                    <Checkbox text="Ulga prorodzinna" name="child" handleChange={(e) => handleTaxBreaksStatus(e)} />
                     <div className={`animated-box ${taxBreaksStatus.child ? "open" : "closed"}`}>
-                        <TaxInput label="Ilość dzieci" type="number" value={childrenNumber}
+                        <TaxInput label="Ilość dzieci" type="number" value={childrenNumber} clear
                             handleChange={(e) => handleChange(e, setChildrenNumber)}
                         />
                     </div>
                     <Checkbox text="Ulga dla krwiodawców" name="bloodDonation" handleChange={(e) => handleTaxBreaksStatus(e)} />
                     <div className={`animated-box ${taxBreaksStatus.bloodDonation ? "open" : "closed"}`}>
-                        <TaxInput label="Ilość litrów krwi" type="number" value={bloodLiters}
+                        <TaxInput label="Ilość litrów krwi" type="number" value={bloodLiters} clear
                             handleChange={(e) => handleChange(e, setBloodLiters)}
                         />
                     </div>
@@ -172,14 +172,19 @@ const EmployeeTaxScale = ({ taxParameters }) => {
                         />
                     </div>
                 </div>
-                <ToggleInput label="Rozliczasz się wspólnie z małżonkiem?"
-                    handleChange={(e) => handleCheckbox(e, setTaxWithSpous)}
-                />
-                <div className={`animated-box ${taxWithSpous ? "open" : "closed"}`}>
-                    <TaxInput label="Roczny dochód małżonka" type="number" value={spouseIncome}
-                        handleChange={(e) => handleChange(e, setSpouseIncome)}
-                    />
-                </div>
+                {
+                    !taxBreaksStatus.youth &&
+                    <>
+                        <ToggleInput label="Rozliczasz się wspólnie z małżonkiem?"
+                            handleChange={(e) => handleCheckbox(e, setTaxWithSpous)}
+                        />
+                        <div className={`animated-box ${taxWithSpous ? "open" : "closed"}`}>
+                            <TaxInput label="Roczne wynagrodzenie małżonka" type="number" value={spouseIncome}
+                                handleChange={(e) => handleChange(e, setSpouseIncome)}
+                            />
+                        </div>
+                    </>
+                }
                 {
                     error &&
                     <div>

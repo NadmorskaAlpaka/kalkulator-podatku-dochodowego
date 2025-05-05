@@ -1,16 +1,20 @@
-export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContributions) => {
+export const employeeTaxScaleWithSpouse = (taxData,taxParameters,socialContributions,spousSocialContributionsValue,taxBreaksValue) => {
 
     let tax = 0;
     let daninaValue = 0;
+    let spouseDaninaValue = 0;
 
     const {taxScale} = taxParameters;
     const {danina} = taxParameters;
 
-    const netIncome = (taxData.income - taxData.costsOfIncome); 
-    const taxBase = (netIncome - socialContributions.yearlySocialContributions);
+    const yearlyEmployeeCostOfIncome = taxScale.employeeMonthlyCostsOfIncome * 12;
+
+    const netIncome = taxData.income - yearlyEmployeeCostOfIncome; 
+    const taxBase = netIncome - socialContributions.yearlySocialContributions;
 
     const {spouseIncome} = taxData;
-    const spouseTaxBase = (spouseIncome - socialContributions.yearlySocialContributions);
+    const spouseNetIncome = spouseIncome - yearlyEmployeeCostOfIncome; 
+    const spouseTaxBase = spouseNetIncome - spousSocialContributionsValue.yearlySocialContributions;
 
     const totalTaxBase = taxBase + spouseTaxBase;
     const taxBasePerSpouse = totalTaxBase / 2;
@@ -40,17 +44,22 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
         }
 
         if(spouseIncome > danina.minIncome){
-            daninaValue += ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
+            spouseDaninaValue += ((spouseIncome - danina.minIncome) * danina.valuePercentage) / 100;
         }
     
     } else {
         tax = 0;
     }
 
+    let taxAfterTaxReductions = tax - taxBreaksValue;
+    if(taxAfterTaxReductions < 0){
+        taxAfterTaxReductions = 0;
+    }
+
     const taxScaleResult = {
         netIncome,
         taxBase,
-        spouseIncome,
+        spouseNetIncome,
         spouseTaxBase,
         totalTaxBase,
         taxBasePerSpouse,
@@ -58,7 +67,9 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
         taxPerSpouse,
         yearlyTaxReduction,
         tax,
+        taxAfterTaxReductions,
         daninaValue,
+        spouseDaninaValue,
     }
 
     return taxScaleResult;
