@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { calculateTaxScaleWithSpouse } from "../utils/calculateTaxScaleWithSpouse";
 import { calculateSocialContributions } from "../utils/calculateSocialContributions"
 import { calculateHealthContributionsForTaxScale } from "../utils/calculateHealthContributionsForTaxScale"
+import { companyTaxBreaks } from "../utils/companyTaxBreaks"
 import { formatPLN } from "../utils/formatPLN";
 import "../styles/calculateTaxScale.css";
 import TaxResult from "./TaxResult";
@@ -21,19 +22,19 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
     // Składka społeczna
     let socialContributionsValue = calculateSocialContributions(socialContributions);
 
+    // ulgi podatkowe
+    const taxBreaksValue = companyTaxBreaks(taxData, taxBreaks);
+
     // Wyniki obliczeń podatku
-    const taxScaleResult = calculateTaxScaleWithSpouse(taxData,taxParameters,socialContributionsValue);
+    const taxScaleResult = calculateTaxScaleWithSpouse(taxData,taxParameters,socialContributionsValue,taxBreaksValue.totalValue);
 
     // Składka zdrowotna
     const healthContributionsValue = calculateHealthContributionsForTaxScale(taxScaleResult.netIncome, healthCountributions.taxScale.valuePercentage);
-    const spouseHealthContributionValue = calculateHealthContributionsForTaxScale(taxData.spouseIncome, healthCountributions.taxScale.valuePercentage);
-    
-    // ulgi podatkowe
-    const taxBreaksValue = 0;
+    const spouseHealthContributionValue = calculateHealthContributionsForTaxScale(taxScaleResult.spouseNetIncome, healthCountributions.taxScale.valuePercentage);
 
     return (
         <div className="tax-result__box">
-            <TaxResult tax={taxScaleResult.tax} 
+            <TaxResult tax={taxData.availableTaxBreaks ? taxScaleResult.taxAfterTaxReductions : taxScaleResult.tax} 
                        socialContributions={socialContributionsValue.yearlySocialContributions}
                        healthContribution={healthContributionsValue}
                        spouseHealthContribution={spouseHealthContributionValue}
@@ -54,7 +55,11 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
                              calculations={`${taxData.income} zł - ${taxData.costsOfIncome} zł = ${taxScaleResult.netIncome} zł`} />
                     <TaxStep name="Roczny dochód małżonka:"
                              calculations={`${taxData.spouseIncome} zł`} />
-                    <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
+                    <TaxStep name="Roczne koszty uzyskania małżonka:"
+                             calculations={`${taxData.spouseCostsOfIncome} zł`} />
+                    <TaxStep name="Roczny dochód:"
+                             calculations={`${taxData.spouseIncome} zł - ${taxData.spouseCostsOfIncome} zł = ${taxScaleResult.spouseNetIncome} zł`} />
+                    <p className="tax-step__heading">2. Obliczanie składek społecznych na małżonka:</p>   
                     <TaxStep name="Ubezpieczenie emerytalne:" 
                              calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
                     <TaxStep name="Ubezpieczenie rentowe:" 
@@ -73,10 +78,14 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
                     <TaxStep name="Składka zdrowotna:" 
                              calculations={`${taxScaleResult.netIncome} zł × ${healthCountributions.taxScale.valuePercentage}% = ${formatPLN(healthContributionsValue)}`} />
                     <TaxStep name="Składka zdrowotna małżonka:" 
-                        calculations={`${taxData.spouseIncome} zł × 9% = ${formatPLN(spouseHealthContributionValue)}`} />
+                        calculations={`${taxScaleResult.spouseNetIncome} zł × 9% = ${formatPLN(spouseHealthContributionValue)}`} />
                     <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
                     <TaxStep name="Podstawa opodatkowania:" 
+                             calculations={`${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} = ${formatPLN(taxScaleResult.taxBase)}`} />
+                    <TaxStep name="Podstawa opodatkowania:" 
                              calculations={`${formatPLN(taxScaleResult.taxBase)}`} />
+                    <TaxStep name="Podstawa opodatkowania małżonka:" 
+                             calculations={`${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} = ${formatPLN(taxScaleResult.spouseTaxBase)}`} />
                     <TaxStep name="Podstawa opodatkowania małżonka:" 
                              calculations={`${formatPLN(taxScaleResult.spouseTaxBase)}`} />
                     <TaxStep name="Łączna podstawa opodatkowania:" 
@@ -107,14 +116,39 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
                     <TaxStep name="Łączny podatek:" 
                              calculations={`${formatPLN(taxScaleResult.tax)}`} />
                     {
-                        taxScaleResult.daninaValue > 0 ? 
+                        taxData.availableTaxBreaks &&
                         <>
-                            <p className="tax-step__heading">7. Obliczenie daniny solidarnościowej:</p>
-                            <TaxStep name="Danina solidatnościowa:" 
-                                     calculations={`(${taxScaleResult.netIncome} zł - 1000000 zł) * 4% = ${taxScaleResult.daninaValue} zł`} /> 
+                            <p className="tax-step__heading">7. Odliczenie ulg podatkowych:</p>
+                            <TaxStep name="Ulga na internet:" 
+                                    calculations={`${formatPLN(taxBreaksValue.internet)}`} />
+                            <TaxStep name="Ulga rehabilitacyjna:" 
+                                    calculations={`${formatPLN(taxBreaksValue.rehabilitation)}`} />
+                            <TaxStep name="Ulga prorodzinna" 
+                                    calculations={`${formatPLN(taxBreaksValue.children)}`} />
+                            <TaxStep name="Inna ulga:" 
+                                    calculations={`${formatPLN(taxBreaksValue.other)}`} />
+                            <TaxStep name="Suma ulg podatkowych:" 
+                                    calculations={`${formatPLN(taxBreaksValue.totalValue)}`} />
+                            <p className="tax-step__heading">8. Podatek końcowy:</p>
+                            <TaxStep name="Obliczenie podatku po odjęciu ulg:" 
+                                    calculations={`${formatPLN(taxScaleResult.tax)} - ${formatPLN(taxBreaksValue.totalValue)} = ${formatPLN(taxScaleResult.tax - taxBreaksValue.totalValue)}`} />
+                            <TaxStep name="Finalny podatek:" 
+                                    calculations={`${formatPLN(taxScaleResult.taxAfterTaxReductions)}`} />
                         </>
-                        :
-                        <></>
+                    }
+                    {
+                        (taxScaleResult.daninaValue > 0 || taxScaleResult.spouseDaninaValue > 0) &&
+                        <p className="tax-step__heading">* Obliczenie daniny solidarnościowej:</p> 
+                    }      
+                    {
+                        taxScaleResult.daninaValue > 0 &&
+                        <TaxStep name="Danina solidatnościowa:" 
+                                  calculations={`(${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(taxParameters.danina.minIncome)}) * ${taxParameters.danina.valuePercentage}% = ${formatPLN(taxScaleResult.daninaValue)}`} /> 
+                    }
+                    {
+                        taxScaleResult.spouseDaninaValue > 0 &&
+                        <TaxStep name="Danina solidatnościowa małżonka:" 
+                                  calculations={`(${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(taxParameters.danina.minIncome)}) * ${taxParameters.danina.valuePercentage}% = ${formatPLN(taxScaleResult.spouseDaninaValue)}`} /> 
                     }
                 </div>
             </div>

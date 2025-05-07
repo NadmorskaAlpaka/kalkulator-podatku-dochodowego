@@ -1,7 +1,8 @@
-export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContributions) => {
+export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContributions,taxBreaksValue) => {
 
     let tax = 0;
     let daninaValue = 0;
+    let spouseDaninaValue = 0;
 
     const {taxScale} = taxParameters;
     const {danina} = taxParameters;
@@ -9,8 +10,8 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
     const netIncome = (taxData.income - taxData.costsOfIncome); 
     const taxBase = (netIncome - socialContributions.yearlySocialContributions);
 
-    const {spouseIncome} = taxData;
-    const spouseTaxBase = (spouseIncome - socialContributions.yearlySocialContributions);
+    const spouseNetIncome = (taxData.spouseIncome - taxData.spouseCostsOfIncome);
+    const spouseTaxBase = (spouseNetIncome - socialContributions.yearlySocialContributions);
 
     const totalTaxBase = taxBase + spouseTaxBase;
     const taxBasePerSpouse = totalTaxBase / 2;
@@ -34,23 +35,28 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
             tax = 0;
         }
 
-        // Danina solidarnościowa
+        // danina solidarnościowa
         if(netIncome > danina.minIncome){
             daninaValue += ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
         }
 
-        if(spouseIncome > danina.minIncome){
-            daninaValue += ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
+        if(spouseNetIncome > danina.minIncome){
+            spouseDaninaValue += ((spouseNetIncome - danina.minIncome) * danina.valuePercentage) / 100;
         }
     
     } else {
         tax = 0;
     }
 
+    let taxAfterTaxReductions = tax - taxBreaksValue;
+    if(taxAfterTaxReductions < 0){
+        taxAfterTaxReductions = 0;
+    }
+
     const taxScaleResult = {
         netIncome,
         taxBase,
-        spouseIncome,
+        spouseNetIncome,
         spouseTaxBase,
         totalTaxBase,
         taxBasePerSpouse,
@@ -58,7 +64,9 @@ export const calculateTaxScaleWithSpouse = (taxData,taxParameters,socialContribu
         taxPerSpouse,
         yearlyTaxReduction,
         tax,
+        taxAfterTaxReductions,
         daninaValue,
+        spouseDaninaValue
     }
 
     return taxScaleResult;

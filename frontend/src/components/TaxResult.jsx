@@ -24,16 +24,27 @@ const TaxResult = ({tax,socialContributions,healthContribution,taxWithSpouse,spo
                 <h2 className="tax__name">Składki społeczne {taxWithSpouse && "na małżonka"}:</h2>
                 <p className="tax__value">{socialContributions.toFixed(2)} zł</p>
             </div>
+            {
+                taxWithSpouse && 
+                <div className="tax__box">
+                    <h2 className="tax__name">Łączne składki społeczne</h2>
+                    <p className="tax__value">{(socialContributions + socialContributions).toFixed(2)} zł</p>
+                </div>
+            }
             <div className="tax__box">
-                <h2 className="tax__name">Składka zdrowotna</h2>
+                <h2 className="tax__name">Składka zdrowotna:</h2>
                 <p className="tax__value">{healthContribution.toFixed(2)} zł</p>
             </div>
             {
                 taxWithSpouse && 
                 <>
                     <div className="tax__box">
-                        <h2 className="tax__name">Składka zdrowotna {taxWithSpouse && "małżonka"}:</h2>
+                        <h2 className="tax__name">Składka zdrowotna małżonka:</h2>
                         <p className="tax__value">{spouseHealthContribution.toFixed(2)} zł</p>
+                    </div>
+                    <div className="tax__box">
+                        <h2 className="tax__name">Łączna składka zdrowotna:</h2>
+                        <p className="tax__value">{(healthContribution + spouseHealthContribution).toFixed(2)} zł</p>
                     </div>
                 </>
             }

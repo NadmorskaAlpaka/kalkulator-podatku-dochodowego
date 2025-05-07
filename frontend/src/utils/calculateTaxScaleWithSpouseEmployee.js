@@ -1,7 +1,8 @@
-export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,socialContributions,spousSocialContributionsValue) => {
+export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,socialContributions,spousSocialContributionsValue,taxBreaksValue) => {
 
     let tax = 0;
     let daninaValue = 0;
+    let spouseDaninaValue = 0;
 
     const {taxScale} = taxParameters;
     const {danina} = taxParameters;
@@ -40,11 +41,16 @@ export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,social
         }
 
         if(spouseIncome > danina.minIncome){
-            daninaValue += ((netIncome - danina.minIncome) * danina.valuePercentage) / 100;
+            spouseDaninaValue += ((spouseIncome - danina.minIncome) * danina.valuePercentage) / 100;
         }
     
     } else {
         tax = 0;
+    }
+
+    let taxAfterTaxReductions = tax - taxBreaksValue;
+    if(taxAfterTaxReductions < 0){
+        taxAfterTaxReductions = 0;
     }
 
     const taxScaleResult = {
@@ -58,7 +64,9 @@ export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,social
         taxPerSpouse,
         yearlyTaxReduction,
         tax,
+        taxAfterTaxReductions,
         daninaValue,
+        spouseDaninaValue
     }
 
     return taxScaleResult;

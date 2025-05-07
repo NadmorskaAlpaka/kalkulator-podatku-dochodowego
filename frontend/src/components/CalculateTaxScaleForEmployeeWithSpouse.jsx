@@ -103,14 +103,14 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                              calculations={`${formatPLN(spousSocialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}`} />
                     <p className="tax-step__heading">3. Obliczanie ubezpieczenia zdrowotnego:</p>  
                     <TaxStep name="Miesięczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${socialContributionsValue.monthlyIncome} zł - ${formatPLN(socialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(socialContributionsValue.monthlyIncome)} - ${formatPLN(socialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContribution)}`} />
                     <TaxStep name="Roczne ubezpieczenie zdrowotne:" 
                              calculations={`(${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.yearlyHealthContribution)}`} />
                     <hr />
                     <TaxStep name="Miesięczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${spousSocialContributionsValue.monthlyIncome} zł - ${formatPLN(spousSocialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.monthlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(spousSocialContributionsValue.monthlyIncome)} - ${formatPLN(spousSocialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.monthlyHealthContribution)}`} />
                     <TaxStep name="Roczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${taxScaleResult.spouseNetIncome} zł - ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.yearlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.yearlyHealthContribution)}`} />
                     <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
                     <TaxStep name="Podstawa opodatkowania:" 
                              calculations={`${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} = ${formatPLN(taxScaleResult.taxBase)}`} />
@@ -179,7 +179,7 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                     }
                     {
                         taxScaleResult.spouseDaninaValue > 0 &&
-                        <TaxStep name="Danina solidatnościowa:" 
+                        <TaxStep name="Danina solidatnościowa małżonka:" 
                                   calculations={`(${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(taxParameters.danina.minIncome)}) * ${taxParameters.danina.valuePercentage}% = ${formatPLN(taxScaleResult.spouseDaninaValue)}`} /> 
                     }
                 </div>
