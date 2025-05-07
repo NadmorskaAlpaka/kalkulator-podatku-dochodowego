@@ -3,7 +3,9 @@ export const defaultValues = {
     taxScale: {
         firstPercentage: 12,
         incomeThreshold: 120000,
-        secondPercentage: 32
+        secondPercentage: 32,
+        employeeMonthlyCostsOfIncome: 250,
+        monthlyTaxReductionAmount: 300
     },
     lumpSumTax:[2,3,5.5,8.5,10,12,12.5,14,15,17],
     socialContributions: {

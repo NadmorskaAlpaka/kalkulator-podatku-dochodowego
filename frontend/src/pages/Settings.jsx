@@ -488,6 +488,28 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                         />
                         <span>% od nadwyżki</span>
                     </div>
+                    <div>
+                        <span>Miesieczne koszty uzyskania przychodu pracownika:</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                            value={taxScale.employeeMonthlyCostsOfIncome}
+                            onChange={(e) => setTaxScale(prev => ({
+                                ...prev,
+                                employeeMonthlyCostsOfIncome: parseFloat(e.target.value) || 0
+                            }))}
+                        />
+                        <span>zł</span>
+                    </div>
+                    <div>
+                        <span>Miesieczna kwota zmniejszająca podatek:</span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                            value={taxScale.monthlyTaxReductionAmount}
+                            onChange={(e) => setTaxScale(prev => ({
+                                ...prev,
+                                monthlyTaxReductionAmount: parseFloat(e.target.value) || 0
+                            }))}
+                        />
+                        <span>zł</span>
+                    </div>
                     <h2 className="settings__category">Podatek liniowy</h2>
                     <div>
                         <span>Jednolita stawka podatkowa </span>

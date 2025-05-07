@@ -19,21 +19,18 @@ const TaxScale = ({taxParameters}) => {
         internet: false,
         rehabilitation: false,
         child: false,
-        bloodDonation: false,
-        newTech: false,
-        youth: false,
         other: false,
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
+
+    const [spouseBussines, setSpouseBussines] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
     const [spouseIncome, setSpouseIncome] = useState(0);
-    const [contract, setContract] = useState("");
+    const [spouseCostsOfIncome, setSpouseCostsOfIncome] = useState(0);
 
     const [internetValue, setInternetValue] = useState(0);
     const [rehabilitationValue, setrehabilitationValue] = useState(0);
     const [childrenNumber, setChildrenNumber] = useState(0);
-    const [bloodLiters, setBloodLiters] = useState(0);
-    const [newTechnologyValue, setNewTechnologyValue] = useState(0);
     const [otherTaxBreakValue, setOtherTaxBreakValue] = useState(0);
 
     const handleCheckbox = (e,setter) => {
@@ -59,9 +56,8 @@ const TaxScale = ({taxParameters}) => {
         // console.log("Rozliczasz się wspólnie z małżonkiem?", taxWithSpous)
         // console.log("Roczny dochód małżonka", spouseIncome);
         // console.log(error);
-        console.log(contract);
         console.log("licza dzieci wpisywanie",childrenNumber)
-    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaksStatus, error,childrenNumber,contract])
+    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaksStatus, error,childrenNumber])
 
     const validateInputs = () => {
         let error = false;
@@ -87,6 +83,11 @@ const TaxScale = ({taxParameters}) => {
             error = true;
         }
 
+        if(taxWithSpous && spouseCostsOfIncome < 0){
+            errorMessage.push("Koszty uzyskania przychodu małżonka nie moga być mniejsze od zera");
+            error = true;
+        }
+
         setErrorMessage(errorMessage)
         setError(error);
         return error;
@@ -94,19 +95,18 @@ const TaxScale = ({taxParameters}) => {
 
     const submit = () => {
         const taxData = {
-            income,
-            costsOfIncome,
+            income: Number(income),
+            costsOfIncome: Number(costsOfIncome),
             taxBreaksStatus,
             availableTaxBreaks,
             taxWithSpous,
-            spouseIncome,
-            internetValue,
-            rehabilitationValue,
-            contract,
+            spouseBussines,
+            spouseIncome: Number(spouseIncome),
+            spouseCostsOfIncome: Number(spouseCostsOfIncome),
+            internetValue: Number(internetValue),
+            rehabilitationValue: Number(rehabilitationValue),
             childrenNumber: Number(childrenNumber),
-            bloodLiters,
-            newTechnologyValue,
-            otherTaxBreakValue,
+            otherTaxBreakValue: Number(otherTaxBreakValue)
         }
 
         let data = {
@@ -152,23 +152,10 @@ const TaxScale = ({taxParameters}) => {
                         </div>
                         <Checkbox text="Ulga na dziecko" name="child" handleChange={(e) => handleTaxBreaksStatus(e)}/>
                         <div className={`animated-box ${taxBreaksStatus.child ? "open" : "closed"}`}>
-                            <TaxInput label="Ilość dzieci" type="number" value={childrenNumber}
+                            <TaxInput label="Ilość dzieci" type="number" value={childrenNumber} clear
                                     handleChange={(e) => handleChange(e,setChildrenNumber)} 
                             />
                         </div>
-                        <Checkbox text="Ulga dla krwiodawców" name="bloodDonation" handleChange={(e) => handleTaxBreaksStatus(e)}/>
-                        <div className={`animated-box ${taxBreaksStatus.bloodDonation ? "open" : "closed"}`}>
-                            <TaxInput label="Ilość litrów krwi" type="number" value={bloodLiters}
-                                    handleChange={(e) => handleChange(e,setBloodLiters)} 
-                            />
-                        </div>
-                        <Checkbox text="Ulga na nowe technologie" name="newTech" handleChange={(e) => handleTaxBreaksStatus(e)}/>
-                        <div className={`animated-box ${taxBreaksStatus.newTech ? "open" : "closed"}`}>
-                            <TaxInput label="Koszty poniesione na nowe technologie" type="number" value={newTechnologyValue}
-                                    handleChange={(e) => handleChange(e,setNewTechnologyValue)} 
-                            />
-                        </div>
-                        <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaksStatus(e)} />
                         <Checkbox text="Inna ulga" name="other" handleChange={(e) => handleTaxBreaksStatus(e)}/>
                         <div className={`animated-box ${taxBreaksStatus.other ? "open" : "closed"}`}>
                             <TaxInput label="Kwota innych ulg" type="number" value={otherTaxBreakValue}
@@ -180,9 +167,17 @@ const TaxScale = ({taxParameters}) => {
                                  handleChange={(e) => handleCheckbox(e,setTaxWithSpous)}
                     />
                     <div className={`animated-box ${taxWithSpous ? "open" : "closed"}`}>
-                        <TaxInput label="Roczny dochód małżonka" type="number" value={spouseIncome}
+                        <ToggleInput label="Czy małżonek prowadzi działalność gospodarczą?" 
+                                 handleChange={(e) => handleCheckbox(e,setSpouseBussines)}
+                        />
+                        <TaxInput label={spouseBussines ? "Roczny dochód małżonka" : "Roczne wynagordzenie małżonka"} type="number" value={spouseIncome}
                                   handleChange={(e) => handleChange(e,setSpouseIncome)} 
                         />
+                        <div className={`animated-box ${spouseBussines ? "open" : "closed"}`}>
+                            <TaxInput label="Roczne koszty uzyskania przychodu małżonka" type="number" value={spouseCostsOfIncome}
+                                    handleChange={(e) => handleChange(e,setSpouseCostsOfIncome)} 
+                            />
+                        </div>
                     </div>
                     { 
                         error && 

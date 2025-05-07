@@ -1,6 +1,6 @@
-export const calculateEmployeeSocialContributionsForTaxScale = (employeeSocialContributions, taxData) => {
+export const calculateEmployeeSocialContributionsForTaxScale = (employeeSocialContributions, income) => {
 
-    const monthlyIncome = taxData.income / 12;
+    const monthlyIncome = income / 12;
     const uEmerytalne = (monthlyIncome * employeeSocialContributions.uEmerytalnePercentage) / 100;
     const uRentowe = (monthlyIncome * employeeSocialContributions.uRentowePercentage) / 100;
     const uChorobowe = (monthlyIncome * employeeSocialContributions.uChorobowePercentage) / 100; 

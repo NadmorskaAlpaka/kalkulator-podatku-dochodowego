@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { calculateTaxScale } from "../utils/calculateTaxScale";
+import { employeeTaxBreaks } from "../utils/employeeTaxBreaks";
 import { employeeTaxScale } from "../utils/employeeTaxScale";
 import { calculateEmployeeHealthContributionsForTaxScale } from "../utils/calculateEmployeeHealthContributionsForTaxScale"
 import { calculateEmployeeSocialContributionsForTaxScale } from "../utils/calculateEmployeeSocialContributionsForTaxScale"
@@ -27,9 +27,10 @@ const CalculateTaxScaleForYouth = ({data}) => {
     let socialContributionsValue;
     let taxScaleResult;
     let healthContributionsValue;
+    let taxBreaksValue;
 
     if(taxData.contract === "zlecenie" && taxData.income <= incomeLimit) {
-            // Składka społeczna
+        // Składka społeczna
         socialContributionsValue = {
             monthlyIncome: 0,
             uEmerytalne: 0,
@@ -39,16 +40,20 @@ const CalculateTaxScaleForYouth = ({data}) => {
             yearlySocialContributions: 0
         }
 
-            // Wyniki obliczeń podatku
+        // Ulgi podatkowe
+        taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
+
+        // Wyniki obliczeń podatku
         taxScaleResult = {
             netIncome: taxData.income,
             taxBase: 0,
             isTaxFree: true,
             tax: 0,
-            daninaValue: 0,
+            taxAfterTaxReductions: 0,
+            daninaValue: 0
         }
         
-            // Składka zdrowotna
+        // Składka zdrowotna
         healthContributionsValue = {
             monthlyHealthContribution: 0,
             yearlyHealthContribution: 0
@@ -56,16 +61,20 @@ const CalculateTaxScaleForYouth = ({data}) => {
 
     } else if (taxData.contract === "praca" && taxData.income <= incomeLimit) {
         // Składka społeczna
-        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData);
+        socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData.income);
+
+        // Ulgi podatkowe
+        taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
 
         // Wyniki obliczeń podatku
         taxScaleResult = {
             netIncome: taxData.income,
-            tax: 0
+            tax: 0,
+            taxAfterTaxReductions: 0
         };
                 
         // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData,healthCountributions,socialContributionsValue);
+        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData.income,healthCountributions,socialContributionsValue);
 
     } else if (taxData.contract === "zlecenie" && taxData.income > incomeLimit){
         let incomeOverLimit = taxData.income - incomeLimit;
@@ -76,16 +85,19 @@ const CalculateTaxScaleForYouth = ({data}) => {
         }
         console.log(updatedTaxData)
 
+        // Ulgi podatkowe
+        taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
+
         // Składka społeczna
         socialContributionsValue = youthEmployeSocialContributionsOverLimit(employeeSocialContributions,updatedTaxData);
 
         // Wyniki obliczeń podatku
-        taxScaleResult = employeeTaxScale(updatedTaxData,taxParameters,socialContributionsValue);
+        taxScaleResult = employeeTaxScale(updatedTaxData,taxParameters,socialContributionsValue,taxBreaksValue.totalValue);
 
         console.log(taxScaleResult)
 
         // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(updatedTaxData,healthCountributions,socialContributionsValue);
+        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(incomeOverLimit,healthCountributions,socialContributionsValue);
 
     } else if (taxData.contract === "praca" && taxData.income > incomeLimit){
         let incomeOverLimit = taxData.income - incomeLimit;
@@ -95,37 +107,40 @@ const CalculateTaxScaleForYouth = ({data}) => {
             income: parseFloat(incomeOverLimit)
         }
         console.log(updatedTaxData)
-                // Składka społeczna
+
+        // Ulgi podatkowe
+        taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
+        
+        // Składka społeczna
         socialContributionsValue = youthEmployeSocialContributionsOverLimit(employeeSocialContributions,updatedTaxData);
 
-                // Wyniki obliczeń podatku
-        taxScaleResult = employeeTaxScale(updatedTaxData,taxParameters,socialContributionsValue);
+        // Wyniki obliczeń podatku
+        taxScaleResult = employeeTaxScale(updatedTaxData,taxParameters,socialContributionsValue,taxBreaksValue.totalValue);
         
-                // Składka zdrowotna
-        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(updatedTaxData,healthCountributions,socialContributionsValue);
+        // Składka zdrowotna
+        healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(incomeOverLimit,healthCountributions,socialContributionsValue);
     }
-
-    // ulgi podatkowe
-    const taxBreaksValue = 0;
 
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);
     }
+    
+    console.log("aaaaaaaaaaaaaa", taxScaleResult.taxAfterTaxReductions)
 
     return (
         <div className="tax-result__box employee">
             <p className="tax__header">Zatrudnienie na podstawie {taxData.contract === "praca" ? "umowy o pracę" : "umowy zlecenie"}</p>
-            <ToggleInput label="Podatek w skali miesiąca" 
+            <ToggleInput label="Rozliczenie w skali miesiąca" 
                          handleChange={(e) => handleCheckbox(e,setMonthly)}
             />
             {
                 monthly ?
-                <TaxResult tax={taxScaleResult.tax / 12} 
+                <TaxResult tax={taxData.availableTaxBreaks ? taxScaleResult.taxAfterTaxReductions / 12 : taxScaleResult.tax / 12} 
                 socialContributions={socialContributionsValue.monthlySocialContributions}
                 healthContribution={healthContributionsValue.monthlyHealthContribution}
                 />
                 :
-                <TaxResult tax={taxScaleResult.tax} 
+                <TaxResult tax={taxData.availableTaxBreaks ? taxScaleResult.taxAfterTaxReductions : taxScaleResult.tax} 
                 socialContributions={socialContributionsValue.yearlySocialContributions}
                 healthContribution={healthContributionsValue.yearlyHealthContribution}
                 />
@@ -160,8 +175,32 @@ const CalculateTaxScaleForYouth = ({data}) => {
                             <p className="tax-step__heading">4. Obliczenie podatku</p>  
                             <TaxStep name="Należny podatek w skali roku:" 
                                     calculations={`${formatPLN(taxScaleResult.tax)}`} />
-                        </>
-                          
+                            {
+                                taxData.availableTaxBreaks &&
+                                <>
+                                <p className="tax-step__heading">5. Odliczenie ulg podatkowych:</p>
+                                <TaxStep name="Ulga na internet:" 
+                                        calculations={`${formatPLN(taxBreaksValue.internet)}`} />
+                                <TaxStep name="Ulga rehabilitacyjna:" 
+                                        calculations={`${formatPLN(taxBreaksValue.rehabilitation)}`} />
+                                <TaxStep name="Ulga prorodzinna" 
+                                        calculations={`${formatPLN(taxBreaksValue.children)}`} />
+                                <TaxStep name="Ulga dla krwiodawców:" 
+                                        calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
+                                <TaxStep name="Ulga na nowe technologie:" 
+                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
+                                <TaxStep name="Inna ulga:" 
+                                        calculations={`${formatPLN(taxBreaksValue.other)}`} />
+                                <TaxStep name="Suma ulg podatkowych:" 
+                                        calculations={`${formatPLN(taxBreaksValue.totalValue)}`} />
+                                <p className="tax-step__heading">6. Podatek końcowy:</p>
+                                <TaxStep name="Obliczenie podatku po odjęciu ulg:" 
+                                    calculations={`${formatPLN(taxScaleResult.tax)} - ${formatPLN(taxBreaksValue.totalValue)} = ${formatPLN(taxScaleResult.tax - taxBreaksValue.totalValue)}`} />
+                                <TaxStep name="Finalny podatek:" 
+                                    calculations={`${formatPLN(taxScaleResult.taxAfterTaxReductions)}`} />
+                                </>
+                           }
+                        </>   
                     }
                     {
                         taxData.contract === "zlecenie" && taxData.income > incomeLimit &&
@@ -174,7 +213,7 @@ const CalculateTaxScaleForYouth = ({data}) => {
                             <TaxStep name="Kwota zwolniona z podatku:"
                              calculations={formatPLN(incomeLimit)} />
                             <TaxStep name="Pozostała kwota podlegająca opodatkowaniu:"
-                             calculations={`${formatPLN(taxData.income)} - ${formatPLN(incomeLimit)} = ${formatPLN(taxScaleResult.netIncome)}`} />
+                             calculations={`${formatPLN(taxData.income)} - ${formatPLN(incomeLimit)} = ${formatPLN(socialContributionsValue.taxedIncome)}`} />
                             <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
                             <TaxStep name="Ubezpieczenie emerytalne:" 
                                     calculations={`${formatPLN(socialContributionsValue.taxedIncome)} × ${employeeSocialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
@@ -202,21 +241,56 @@ const CalculateTaxScaleForYouth = ({data}) => {
                             { 
                                 taxScaleResult.taxBase < taxParameters.taxScale.incomeThreshold ? 
                                 <>
-                                    <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>  
-                                    <TaxStep name="Obliczenie podatku:" 
-                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}%) - 3600 zł = ${formatPLN(taxScaleResult.tax)}`} />
+                                    <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>
+                                    {
+                                        !taxScaleResult.isTaxFree ? 
+                                        <TaxStep name="Obliczenie podatku:" 
+                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}%) - ${formatPLN(taxScaleResult.yearlyTaxReduction)} = ${formatPLN(taxScaleResult.tax)}`} />
+                                        :
+                                        <TaxStep name="Wolny od podatku" />
+                                    }
                                 </>
                                 :
                                 <>
-                                    <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
-                                    <TaxStep name="Obliczenie podatku:" 
-                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - 3600 zł) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                    <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p> 
+                                    {
+                                        !taxScaleResult.isTaxFree ? 
+                                        <TaxStep name="Obliczenie podatku:" 
+                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                        :
+                                        <TaxStep name="Wolny od podatku" />
+                                    } 
                                 </>
                             }
                             <TaxStep name="Miesięczna zaliczka na podatek" 
                                     calculations={`${formatPLN(taxScaleResult.tax / 12)}`} />
                             <TaxStep name="Należny podatek w skali roku:" 
                                     calculations={`${formatPLN(taxScaleResult.tax)}`} />
+                            {
+                                taxData.availableTaxBreaks &&
+                                <>
+                                <p className="tax-step__heading">7. Odliczenie ulg podatkowych:</p>
+                                <TaxStep name="Ulga na internet:" 
+                                        calculations={`${formatPLN(taxBreaksValue.internet)}`} />
+                                <TaxStep name="Ulga rehabilitacyjna:" 
+                                        calculations={`${formatPLN(taxBreaksValue.rehabilitation)}`} />
+                                <TaxStep name="Ulga prorodzinna" 
+                                        calculations={`${formatPLN(taxBreaksValue.children)}`} />
+                                <TaxStep name="Ulga dla krwiodawców:" 
+                                        calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
+                                <TaxStep name="Ulga na nowe technologie:" 
+                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
+                                <TaxStep name="Inna ulga:" 
+                                        calculations={`${formatPLN(taxBreaksValue.other)}`} />
+                                <TaxStep name="Suma ulg podatkowych:" 
+                                        calculations={`${formatPLN(taxBreaksValue.totalValue)}`} />
+                                <p className="tax-step__heading">8. Podatek końcowy:</p>
+                                <TaxStep name="Obliczenie podatku po odjęciu ulg:" 
+                                    calculations={`${formatPLN(taxScaleResult.tax)} - ${formatPLN(taxBreaksValue.totalValue)} = ${formatPLN(taxScaleResult.tax - taxBreaksValue.totalValue)}`} />
+                                <TaxStep name="Finalny podatek:" 
+                                    calculations={`${formatPLN(taxScaleResult.taxAfterTaxReductions)}`} />
+                                </>
+                           }
                         </>
                     }
                     {
@@ -252,6 +326,31 @@ const CalculateTaxScaleForYouth = ({data}) => {
                                     calculations={`${formatPLN(taxScaleResult.tax / 12)}`} />
                             <TaxStep name="Należny podatek w skali roku:" 
                                     calculations={`${formatPLN(taxScaleResult.tax)}`} />
+                            {
+                                taxData.availableTaxBreaks &&
+                                <>
+                                <p className="tax-step__heading">5. Odliczenie ulg podatkowych:</p>
+                                <TaxStep name="Ulga na internet:" 
+                                        calculations={`${formatPLN(taxBreaksValue.internet)}`} />
+                                <TaxStep name="Ulga rehabilitacyjna:" 
+                                        calculations={`${formatPLN(taxBreaksValue.rehabilitation)}`} />
+                                <TaxStep name="Ulga prorodzinna" 
+                                        calculations={`${formatPLN(taxBreaksValue.children)}`} />
+                                <TaxStep name="Ulga dla krwiodawców:" 
+                                        calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
+                                <TaxStep name="Ulga na nowe technologie:" 
+                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
+                                <TaxStep name="Inna ulga:" 
+                                        calculations={`${formatPLN(taxBreaksValue.other)}`} />
+                                <TaxStep name="Suma ulg podatkowych:" 
+                                        calculations={`${formatPLN(taxBreaksValue.totalValue)}`} />
+                                <p className="tax-step__heading">6. Podatek końcowy:</p>
+                                <TaxStep name="Obliczenie podatku po odjęciu ulg:" 
+                                    calculations={`${formatPLN(taxScaleResult.tax)} - ${formatPLN(taxBreaksValue.totalValue)} = ${formatPLN(taxScaleResult.tax - taxBreaksValue.totalValue)}`} />
+                                <TaxStep name="Finalny podatek:" 
+                                    calculations={`${formatPLN(taxScaleResult.taxAfterTaxReductions)}`} />
+                                </>
+                           }
                         </>
                     }
                     {
@@ -265,7 +364,7 @@ const CalculateTaxScaleForYouth = ({data}) => {
                             <TaxStep name="Kwota zwolniona z podatku:"
                              calculations={formatPLN(incomeLimit)} />
                             <TaxStep name="Pozostała kwota podlegająca opodatkowaniu:"
-                             calculations={`${formatPLN(taxData.income)} - ${formatPLN(incomeLimit)} = ${formatPLN(taxScaleResult.netIncome)}`} />
+                             calculations={`${formatPLN(taxData.income)} - ${formatPLN(incomeLimit)} = ${formatPLN(socialContributionsValue.taxedIncome)}`} />
                             <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
                             <TaxStep name="Ubezpieczenie emerytalne:" 
                                     calculations={`${formatPLN(socialContributionsValue.taxedIncome)} × ${employeeSocialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
@@ -293,21 +392,56 @@ const CalculateTaxScaleForYouth = ({data}) => {
                             { 
                                 taxScaleResult.taxBase < taxParameters.taxScale.incomeThreshold ? 
                                 <>
-                                    <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>  
-                                    <TaxStep name="Obliczenie podatku:" 
-                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}%) - 3600 zł = ${formatPLN(taxScaleResult.tax)}`} />
+                                    <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>
+                                    {
+                                        !taxScaleResult.isTaxFree ? 
+                                        <TaxStep name="Obliczenie podatku:" 
+                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}%) - ${formatPLN(taxScaleResult.yearlyTaxReduction)} = ${formatPLN(taxScaleResult.tax)}`} />
+                                        :
+                                        <TaxStep name="Wolny od podatku" />
+                                    }
                                 </>
                                 :
                                 <>
-                                    <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
-                                    <TaxStep name="Obliczenie podatku:" 
-                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - 3600 zł) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                    <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p> 
+                                    {
+                                        !taxScaleResult.isTaxFree ? 
+                                        <TaxStep name="Obliczenie podatku:" 
+                                            calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                        :
+                                        <TaxStep name="Wolny od podatku" />
+                                    } 
                                 </>
                             }
                             <TaxStep name="Miesięczna zaliczka na podatek" 
                                     calculations={`${formatPLN(taxScaleResult.tax / 12)}`} />
                             <TaxStep name="Należny podatek w skali roku:" 
                                     calculations={`${formatPLN(taxScaleResult.tax)}`} />
+                            {
+                                taxData.availableTaxBreaks &&
+                                <>
+                                <p className="tax-step__heading">7. Odliczenie ulg podatkowych:</p>
+                                <TaxStep name="Ulga na internet:" 
+                                        calculations={`${formatPLN(taxBreaksValue.internet)}`} />
+                                <TaxStep name="Ulga rehabilitacyjna:" 
+                                        calculations={`${formatPLN(taxBreaksValue.rehabilitation)}`} />
+                                <TaxStep name="Ulga prorodzinna" 
+                                        calculations={`${formatPLN(taxBreaksValue.children)}`} />
+                                <TaxStep name="Ulga dla krwiodawców:" 
+                                        calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
+                                <TaxStep name="Ulga na nowe technologie:" 
+                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
+                                <TaxStep name="Inna ulga:" 
+                                        calculations={`${formatPLN(taxBreaksValue.other)}`} />
+                                <TaxStep name="Suma ulg podatkowych:" 
+                                        calculations={`${formatPLN(taxBreaksValue.totalValue)}`} />
+                                <p className="tax-step__heading">8. Podatek końcowy:</p>
+                                <TaxStep name="Obliczenie podatku po odjęciu ulg:" 
+                                    calculations={`${formatPLN(taxScaleResult.tax)} - ${formatPLN(taxBreaksValue.totalValue)} = ${formatPLN(taxScaleResult.tax - taxBreaksValue.totalValue)}`} />
+                                <TaxStep name="Finalny podatek:" 
+                                    calculations={`${formatPLN(taxScaleResult.taxAfterTaxReductions)}`} />
+                                </>
+                            }
                         </>
                     }
                 </div>

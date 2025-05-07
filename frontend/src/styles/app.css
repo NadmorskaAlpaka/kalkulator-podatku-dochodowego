@@ -124,7 +124,7 @@ img{
 }
 
 .animated-box.open {
-    max-height: 1000px;
+    max-height: 2000px;
     opacity: 1;
 }
 
