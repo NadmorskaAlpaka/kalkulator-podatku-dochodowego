@@ -17,11 +17,6 @@ const FlatTax = ({taxParameters}) => {
     const handleChange = (e, setter) => {
         setter(e.target.value)
     }
-    
-    useEffect(() => {
-        console.log("Przychód:", income);
-        console.log("Koszty uzyskania przychodu:", costsOfIncome);
-    },[income,costsOfIncome])
 
     const validateInputs = () => {
         let error = false;

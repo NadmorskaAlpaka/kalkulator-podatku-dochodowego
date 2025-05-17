@@ -4,7 +4,6 @@ import PathHead from "../components/PathHead";
 import { defaultValues } from "../defaultTaxValues";
 
 const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => {
-    console.log("Settings",taxParameters);
 
     const initialRates = taxParameters.lumpSumTax;
 
@@ -141,13 +140,11 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         }
         localStorage.setItem(localStorageKey, JSON.stringify(newValues));
         setTaxParameters(newValues);
-        console.log("Save",newValues);
         setMessage("Ustawienia zostały zapisane!");
         setShowMessage(true);
     }
 
     const setDefaultValues = () => {
-        console.log("Reset settings")
         setFlatTax(defaultValues.flatTax);
         setTaxScale(defaultValues.taxScale);
         setRates(defaultValues.lumpSumTax);
@@ -181,60 +178,6 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setMessage("Przywrócono ustawienia domyślne!");
         setShowMessage(true);
     }
-
-//   useEffect(() => {
-//     console.log("minSocialContributionBasis",minSocialContributionBasis);
-//     console.log("uEmerytalnePercentage",uEmerytalnePercentage);
-//     console.log("uRentowePercentage",uRentowePercentage);
-//     console.log("uChorobowePercentage",uChorobowePercentage);
-//     console.log("uWypadkowePercentage",uWypadkowePercentage);
-//     console.log("funduszPracyPercentage",funduszPracyPercentage);
-//     console.log("mimIncome",mimIncome);
-//     console.log("avgIncomeLastQuaterPrevYear",avgIncomeLastQuaterPrevYear);
-//     console.log("healtFlatTax",healtFlatTax);
-//     console.log("healtTaxScale",healtTaxScale);
-//     console.log("healtLumpSumTaxSmall",healtLumpSumTaxSmall);
-//     console.log("healtLumpSumTaxMedium",healtLumpSumTaxMedium);
-//     console.log("healtLumpSumTaxBig",healtLumpSumTaxBig);
-//     console.log("taxBreaksInternet",taxBreaksInternet);
-//     console.log("taxBreaksChildrenOne",taxBreaksChildrenOne);
-//     console.log("taxBreaksChildrenTwo",taxBreaksChildrenTwo);
-//     console.log("taxBreaksChildrenThree",taxBreaksChildrenThree);
-//     console.log("lumpSumTax", lumpSumTax);
-//     console.log("taxBreaksChildrenFour",taxBreaksChildrenFour);
-//     console.log("taxBreaksMoreThanFour",taxBreaksMoreThanFour);
-//     console.log("taxBreaksBloodDonation",taxBreaksBloodDonation);
-//     console.log("taxBreaksNewTechnologyPercentage",taxBreaksNewTechnologyPercentage);
-//     console.log("danina",danina);
-//     console.log("taxFreeAmout",taxFreeAmout);
-//     console.log("taxScale",taxScale);
-//     console.log("flatTax",flatTax);
-//     console.log("lumpSumTax",lumpSumTax);
-//     console.log("rates", rates);
-// },[minSocialContributionBasis,
-//     uEmerytalnePercentage,
-//     uRentowePercentage,
-//     uChorobowePercentage,
-//     uWypadkowePercentage,
-//     funduszPracyPercentage,
-//     mimIncome,
-//     avgIncomeLastQuaterPrevYear,
-//     healtTaxScale,
-//     healtFlatTax,
-//     healtLumpSumTaxSmall,
-//     healtLumpSumTaxMedium,
-//     healtLumpSumTaxBig,
-//     taxBreaksInternet,
-//     taxBreaksChildrenOne,
-//     taxBreaksChildrenTwo,
-//     taxBreaksChildrenThree,
-//     taxBreaksChildrenFour,
-//     taxBreaksMoreThanFour,
-//     taxBreaksBloodDonation,
-//     taxBreaksNewTechnologyPercentage,
-//     danina,
-//     taxFreeAmout,
-//     rates]);
 
     useEffect(() => {
     if (showMessage) {

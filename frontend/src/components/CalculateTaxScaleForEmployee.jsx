@@ -33,7 +33,6 @@ const CalculateTaxScaleForEmployee = ({data}) => {
     // Składka zdrowotna
     const healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData.income,healthCountributions,socialContributionsValue);
 
-    console.log("Ulgi podatkowe", taxBreaksValue);
 
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);

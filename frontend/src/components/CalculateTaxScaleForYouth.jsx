@@ -78,12 +78,10 @@ const CalculateTaxScaleForYouth = ({data}) => {
 
     } else if (taxData.contract === "zlecenie" && taxData.income > incomeLimit){
         let incomeOverLimit = taxData.income - incomeLimit;
-        console.log(incomeOverLimit);
         let updatedTaxData = {
             ...taxData,
             income: parseFloat(incomeOverLimit)
         }
-        console.log(updatedTaxData)
 
         // Ulgi podatkowe
         taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
@@ -94,19 +92,15 @@ const CalculateTaxScaleForYouth = ({data}) => {
         // Wyniki obliczeń podatku
         taxScaleResult = employeeTaxScale(updatedTaxData,taxParameters,socialContributionsValue,taxBreaksValue.totalValue);
 
-        console.log(taxScaleResult)
-
         // Składka zdrowotna
         healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(incomeOverLimit,healthCountributions,socialContributionsValue);
 
     } else if (taxData.contract === "praca" && taxData.income > incomeLimit){
         let incomeOverLimit = taxData.income - incomeLimit;
-        console.log(incomeOverLimit);
         let updatedTaxData = {
             ...taxData,
             income: parseFloat(incomeOverLimit)
         }
-        console.log(updatedTaxData)
 
         // Ulgi podatkowe
         taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
@@ -124,8 +118,6 @@ const CalculateTaxScaleForYouth = ({data}) => {
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);
     }
-    
-    console.log("aaaaaaaaaaaaaa", taxScaleResult.taxAfterTaxReductions)
 
     return (
         <div className="tax-result__box employee">

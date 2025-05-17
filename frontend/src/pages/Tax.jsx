@@ -16,10 +16,6 @@ const Tax = () => {
     const location = useLocation();
     const data = location.state;
 
-    useEffect(() => {
-        console.log("Tax", data);
-    },[])
-
     return (
         <section id="tax">
             <div className="container">

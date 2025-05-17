@@ -48,17 +48,6 @@ const TaxScale = ({taxParameters}) => {
         }));
     };
 
-    useEffect(() => {
-        // console.log("Twoj roczny przychód brutto:", income);
-        // console.log("Twoje roczne koszty uzyskania przychodu", costsOfIncome);
-        // console.log("Przysługują Ci ulgi podatkowe?", availableTaxBreaks)
-        // console.log("Ulgi podatkowe", taxBreaks)
-        // console.log("Rozliczasz się wspólnie z małżonkiem?", taxWithSpous)
-        // console.log("Roczny dochód małżonka", spouseIncome);
-        // console.log(error);
-        console.log("licza dzieci wpisywanie",childrenNumber)
-    },[taxWithSpous,availableTaxBreaks,income,costsOfIncome,spouseIncome,taxBreaksStatus, error,childrenNumber])
-
     const validateInputs = () => {
         let error = false;
         let errorMessage = [];

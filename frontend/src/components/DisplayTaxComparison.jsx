@@ -12,8 +12,6 @@ import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 
 const DisplayTaxComparison = ({data}) => {
 
-    console.log("DisplayTaxComparison", data);
-
     const {taxData} = data;
     const {taxParameters} = data;
     const {income} = taxData
