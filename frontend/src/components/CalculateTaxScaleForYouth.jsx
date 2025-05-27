@@ -179,8 +179,6 @@ const CalculateTaxScaleForYouth = ({data}) => {
                                         calculations={`${formatPLN(taxBreaksValue.children)}`} />
                                 <TaxStep name="Ulga dla krwiodawców:" 
                                         calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
-                                <TaxStep name="Ulga na nowe technologie:" 
-                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
                                 <TaxStep name="Inna ulga:" 
                                         calculations={`${formatPLN(taxBreaksValue.other)}`} />
                                 <TaxStep name="Suma ulg podatkowych:" 
@@ -270,8 +268,6 @@ const CalculateTaxScaleForYouth = ({data}) => {
                                         calculations={`${formatPLN(taxBreaksValue.children)}`} />
                                 <TaxStep name="Ulga dla krwiodawców:" 
                                         calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
-                                <TaxStep name="Ulga na nowe technologie:" 
-                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
                                 <TaxStep name="Inna ulga:" 
                                         calculations={`${formatPLN(taxBreaksValue.other)}`} />
                                 <TaxStep name="Suma ulg podatkowych:" 
@@ -330,8 +326,6 @@ const CalculateTaxScaleForYouth = ({data}) => {
                                         calculations={`${formatPLN(taxBreaksValue.children)}`} />
                                 <TaxStep name="Ulga dla krwiodawców:" 
                                         calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
-                                <TaxStep name="Ulga na nowe technologie:" 
-                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
                                 <TaxStep name="Inna ulga:" 
                                         calculations={`${formatPLN(taxBreaksValue.other)}`} />
                                 <TaxStep name="Suma ulg podatkowych:" 
@@ -421,8 +415,6 @@ const CalculateTaxScaleForYouth = ({data}) => {
                                         calculations={`${formatPLN(taxBreaksValue.children)}`} />
                                 <TaxStep name="Ulga dla krwiodawców:" 
                                         calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
-                                <TaxStep name="Ulga na nowe technologie:" 
-                                        calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
                                 <TaxStep name="Inna ulga:" 
                                         calculations={`${formatPLN(taxBreaksValue.other)}`} />
                                 <TaxStep name="Suma ulg podatkowych:" 

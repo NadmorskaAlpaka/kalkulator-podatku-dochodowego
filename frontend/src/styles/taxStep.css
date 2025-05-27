@@ -11,3 +11,13 @@
 .step__value{
     margin-left: 8px;
 }
+
+@media screen and (max-width: 768px) {
+    .step__value{
+        margin-left: 0;
+    }
+
+    .step{
+        flex-direction: column;
+    }
+}

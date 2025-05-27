@@ -42,7 +42,6 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
     const [taxBreaksChildrenFour,setTaxBreaksChildrenFour] = useState(taxParameters.taxBreaks.children.four);
     const [taxBreaksMoreThanFour,setTaxBreaksMoreThanFour] = useState(taxParameters.taxBreaks.children.moreThanFour);
     const [taxBreaksBloodDonation,setTaxBreaksBloodDonation] = useState(taxParameters.taxBreaks.bloodDonation);
-    const [taxBreaksNewTechnologyPercentage,setTaxBreaksNewTechnologyPercentage] = useState(taxParameters.taxBreaks.newTechnologyPercentage);
     const [taxBreaksYouth,setTaxBreaksYouth] = useState(taxParameters.taxBreaks.youth);
 
     const [danina,setDanina] = useState(taxParameters.danina);
@@ -132,7 +131,6 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                     moreThanFour: taxBreaksMoreThanFour,
                 },
                 bloodDonation: taxBreaksBloodDonation,
-                newTechnologyPercentage: taxBreaksNewTechnologyPercentage,
                 youth: taxBreaksYouth
             },
             danina: danina,
@@ -171,7 +169,6 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setTaxBreaksChildrenFour(defaultValues.taxBreaks.children.four);
         setTaxBreaksMoreThanFour(defaultValues.taxBreaks.children.moreThanFour);
         setTaxBreaksBloodDonation(defaultValues.taxBreaks.bloodDonation);
-        setTaxBreaksNewTechnologyPercentage(defaultValues.taxBreaks.newTechnologyPercentage);
         setTaxBreaksYouth(defaultValues.taxBreaks.youth);
         setDanina(defaultValues.danina);
         setTaxFreeAmout(defaultValues.taxFreeAmout);
@@ -572,14 +569,6 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                             }))}
                         />
                         <span>% dochodu</span>
-                    </div>
-                    <div>
-                        <span>Ulga na nowe technologie: </span>
-                        <input className="settings__input--small" type="number" step="0.01"
-                            value={taxBreaksNewTechnologyPercentage}
-                            onChange={(e) => setTaxBreaksNewTechnologyPercentage(parseFloat(e.target.value) || 0)}
-                        />
-                        <span>% poniesionych wydatków</span>
                     </div>
                     <div>
                         <span>Ulga dla młodych do</span>

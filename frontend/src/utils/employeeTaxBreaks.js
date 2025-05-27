@@ -25,8 +25,6 @@ export const employeeTaxBreaks = (taxData,taxBreaks) => {
         bloodDonation = (taxData.income * taxBreaks.bloodDonation.maxIncomPercentage / 100);
     }
 
-    let newTechnology = (taxData.newTechnologyValue * taxBreaks.newTechnologyPercentage) / 100;
-
     let rehabilitation = taxData.rehabilitationValue;
 
     let other = taxData.otherTaxBreakValue;
@@ -43,10 +41,6 @@ export const employeeTaxBreaks = (taxData,taxBreaks) => {
         bloodDonation = 0;
     }
 
-    if(!taxData.taxBreaksStatus.newTech){
-        newTechnology = 0;
-    }
-
     if(!taxData.taxBreaksStatus.rehabilitation){
         rehabilitation = 0;
     }
@@ -55,14 +49,13 @@ export const employeeTaxBreaks = (taxData,taxBreaks) => {
         other = 0;
     }
 
-    const totalValue = internet + children + bloodDonation + newTechnology + rehabilitation + other;
+    const totalValue = internet + children + bloodDonation + rehabilitation + other;
 
     const taxBreaksResult = {
         totalValue,
         internet,
         children,
         bloodDonation,
-        newTechnology,
         rehabilitation,
         other,
     }

@@ -26,7 +26,7 @@ function App() {
   });
 
   useEffect(() => {
-    const handleWheel = (e) => {
+        const handleWheel = (e) => {
       const active = document.activeElement;
       if (active && active.type === 'number') {
         e.preventDefault();
@@ -38,8 +38,11 @@ function App() {
     return () => {
       document.removeEventListener('wheel', handleWheel);
     };
+  }, [])
+
+  useEffect(() => {
     // console.log("TaxParameters",taxParameters);
-    // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taxParameters));
   }, [taxParameters]);
 
   const reset = () => {
