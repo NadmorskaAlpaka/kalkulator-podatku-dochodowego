@@ -21,12 +21,6 @@ const LumpSumTax = ({taxParameters}) => {
         setter(e.target.value)
     }
 
-    useEffect(() => {
-        console.log("Ryczałt", taxParameters);
-        console.log("Income", income);
-        console.log("stawka", selectedLumpSumValue)
-    }, [income,selectedLumpSumValue])
-
     const validateInputs = () => {
         let error = false;
         let errorMessage = [];

@@ -25,3 +25,17 @@
     font-size: 22px;
     font-weight: 700;
 }
+
+@media screen and (max-width: 768px) {
+    .tax__name,
+    .tax__value{
+        font-size: 18px;
+    }   
+}
+
+@media screen and (max-width: 345px) {
+    .tax__name,
+    .tax__value{
+        font-size: 16px;
+    }   
+}

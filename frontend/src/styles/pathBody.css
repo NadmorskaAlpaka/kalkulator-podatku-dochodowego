@@ -12,6 +12,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
+    justify-items: center;
 }
 
 .path-type__box .card{
@@ -33,6 +34,10 @@
     .path-type__box{
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
+    }
+
+    .path-type__box .card--small{
+        width: 90%;
     }
 }
 

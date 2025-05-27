@@ -19,9 +19,8 @@ const EmployeeTaxScale = ({ taxParameters }) => {
         rehabilitation: false,
         child: false,
         bloodDonation: false,
-        newTech: false,
         youth: false,
-        other: false,
+        other: false
     });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
@@ -32,7 +31,6 @@ const EmployeeTaxScale = ({ taxParameters }) => {
     const [rehabilitationValue, setrehabilitationValue] = useState(0);
     const [childrenNumber, setChildrenNumber] = useState(0);
     const [bloodLiters, setBloodLiters] = useState(0);
-    const [newTechnologyValue, setNewTechnologyValue] = useState(0);
     const [otherTaxBreakValue, setOtherTaxBreakValue] = useState(0);
 
     const handleCheckbox = (e, setter) => {
@@ -64,7 +62,7 @@ const EmployeeTaxScale = ({ taxParameters }) => {
             error = true;
         }
 
-        if (availableTaxBreaks && (!taxBreaksStatus.internet && !taxBreaksStatus.rehabilitation && !taxBreaksStatus.child && !taxBreaksStatus.bloodDonation && !taxBreaksStatus.newTech && !taxBreaksStatus.youth && !taxBreaksStatus.other)) {
+        if (availableTaxBreaks && (!taxBreaksStatus.internet && !taxBreaksStatus.rehabilitation && !taxBreaksStatus.child && !taxBreaksStatus.bloodDonation && !taxBreaksStatus.youth && !taxBreaksStatus.other)) {
             errorMessage.push("Wybierz ulgi podatkowke które Cie dotyczną.");
             error = true;
         }
@@ -91,7 +89,6 @@ const EmployeeTaxScale = ({ taxParameters }) => {
             contract,
             childrenNumber: Number(childrenNumber),
             bloodLiters: Number(bloodLiters),
-            newTechnologyValue: Number(newTechnologyValue),
             otherTaxBreakValue: Number(otherTaxBreakValue)
         }
 
@@ -156,12 +153,6 @@ const EmployeeTaxScale = ({ taxParameters }) => {
                     <div className={`animated-box ${taxBreaksStatus.bloodDonation ? "open" : "closed"}`}>
                         <TaxInput label="Ilość litrów krwi" type="number" value={bloodLiters} clear
                             handleChange={(e) => handleChange(e, setBloodLiters)}
-                        />
-                    </div>
-                    <Checkbox text="Ulga na nowe technologie" name="newTech" handleChange={(e) => handleTaxBreaksStatus(e)} />
-                    <div className={`animated-box ${taxBreaksStatus.newTech ? "open" : "closed"}`}>
-                        <TaxInput label="Koszty poniesione na nowe technologie" type="number" value={newTechnologyValue}
-                            handleChange={(e) => handleChange(e, setNewTechnologyValue)}
                         />
                     </div>
                     <Checkbox text="Ulga dla młodych" name="youth" handleChange={(e) => handleTaxBreaksStatus(e)} />

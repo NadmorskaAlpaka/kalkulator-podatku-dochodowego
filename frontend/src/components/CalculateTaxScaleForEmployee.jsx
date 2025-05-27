@@ -33,7 +33,6 @@ const CalculateTaxScaleForEmployee = ({data}) => {
     // Składka zdrowotna
     const healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData.income,healthCountributions,socialContributionsValue);
 
-    console.log("Ulgi podatkowe", taxBreaksValue);
 
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);
@@ -122,8 +121,6 @@ const CalculateTaxScaleForEmployee = ({data}) => {
                                     calculations={`${formatPLN(taxBreaksValue.children)}`} />
                             <TaxStep name="Ulga dla krwiodawców:" 
                                     calculations={`${formatPLN(taxBreaksValue.bloodDonation)}`} />
-                            <TaxStep name="Ulga na nowe technologie:" 
-                                    calculations={`${formatPLN(taxBreaksValue.newTechnology)}`} />
                             <TaxStep name="Inna ulga:" 
                                     calculations={`${formatPLN(taxBreaksValue.other)}`} />
                             <TaxStep name="Suma ulg podatkowych:" 

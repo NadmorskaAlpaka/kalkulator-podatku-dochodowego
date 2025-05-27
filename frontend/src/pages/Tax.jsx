@@ -16,10 +16,6 @@ const Tax = () => {
     const location = useLocation();
     const data = location.state;
 
-    useEffect(() => {
-        console.log("Tax", data);
-    },[])
-
     return (
         <section id="tax">
             <div className="container">
@@ -31,9 +27,6 @@ const Tax = () => {
                 {(data.taxType === "pracownik" && !data.taxData.taxWithSpous && !data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForEmployee data={data} />}
                 {(data.taxType === "pracownik" && data.taxData.taxWithSpous && !data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForEmployeeWithSpouse data={data} />}
                 {(data.taxType === "pracownik" && data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForYouth data={data} />}
-                {/* {(data.taxType === "pracownik" && data.taxData.taxWithSpous && data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForYouthWithSpouse data={data} />} */}
-                {/* {(data.taxType === "pracownik" && !data.taxData.taxWithSpous && data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForYouth data={data} />}
-                {(data.taxType === "pracownik" && data.taxData.taxWithSpous && data.taxData.taxBreaksStatus.youth) && <CalculateTaxScaleForYouthWithSpouse data={data} />} */}
 
                 {data.taxType === "skala podatkowa" && !data.taxData.taxWithSpous && <CalculateTaxScale data={data} />}
                 {data.taxType === "skala podatkowa" && data.taxData.taxWithSpous && data.taxData.spouseBussines && <CalculateTaxScaleWithSpouse data={data} />}

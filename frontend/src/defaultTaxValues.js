@@ -67,7 +67,6 @@ export const defaultValues = {
             maxIncomPercentage: 6,
             value: 130
         },
-        newTechnologyPercentage: 50,
         youth: 85528
     },
     danina: {
