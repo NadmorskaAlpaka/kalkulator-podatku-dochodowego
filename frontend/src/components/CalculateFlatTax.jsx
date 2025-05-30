@@ -65,7 +65,7 @@ const CalculateFlatTax = ({ data }) => {
                                 calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
                         <p className="tax-step__heading">3. Obliczanie składki zdrowotnej:</p> 
                         <TaxStep name="Składka zdrowotna:" 
-                             calculations={`${formatPLN(flatTaxResult.netIncome)} zł × ${healthCountributions.flatTax.valuePercentage}% = ${formatPLN(healthContributionsValue)} zł`} />
+                             calculations={`${formatPLN(flatTaxResult.netIncome)} zł × ${healthCountributions.flatTax.valuePercentage}% = ${formatPLN(healthContributionsValue)}`} />
                         {
                             healthContributionsValue > 12900 && 
                             <TaxStep name="Limit odliczenia składki zdrowotnej:" 

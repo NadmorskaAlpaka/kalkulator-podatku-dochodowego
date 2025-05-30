@@ -26,7 +26,7 @@ const DisplayTaxComparison = ({data}) => {
 
     // Składka zdrowotna
     const lumpSumTaxHealthContribution = calculateHealthContributionForLumpSumTax(income,healthCountributionsForLumpSumTax,avgIncomeLastQuaterPrevYear);
-    const taxScaleHealthContribution = calculateHealthContributionsForTaxScale(netIncome,healthCountributions.taxScale.valuePercentage);
+    const taxScaleHealthContribution = calculateHealthContributionsForTaxScale(netIncome,healthCountributions.taxScale.valuePercentage,taxParameters);
     const flatTaxHealthContribution = calculateHealtContributionForFlatTax(netIncome,healthCountributions);
     
     // Wyniki obliczeń podatku
