@@ -102,7 +102,7 @@ const CalculateTaxScaleForEmployee = ({data}) => {
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`(${formatPLN(taxScaleResult.taxBase)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
+                                    calculations={`(${formatPLN(taxParameters.taxScale.incomeThreshold)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBase)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.tax)}`} />
                         </>
                     }
                     <TaxStep name="Miesięczna zaliczka na podatek" 

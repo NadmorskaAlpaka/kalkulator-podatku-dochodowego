@@ -1,11 +1,11 @@
 export const calculateSocialContributions = (socialContributions) => {
     const contributionBasis = socialContributions.minSocialContributionBasis;
 
-    const uEmerytalne = (contributionBasis * socialContributions.uEmerytalnePercentage) / 100;
-    const uRentowe = (contributionBasis * socialContributions.uRentowePercentage) / 100;
-    const uChorobowe = (contributionBasis * socialContributions.uChorobowePercentage) / 100; 
-    const uWypadkowe = (contributionBasis * socialContributions.uWypadkowePercentage) / 100;
-    const funduszPracy = (contributionBasis * socialContributions.funduszPracyPercentage) / 100;
+    const uEmerytalne = Number(((contributionBasis * socialContributions.uEmerytalnePercentage) / 100).toFixed(2));
+    const uRentowe = Number(((contributionBasis * socialContributions.uRentowePercentage) / 100).toFixed(2));
+    const uChorobowe = Number(((contributionBasis * socialContributions.uChorobowePercentage) / 100).toFixed(2)); 
+    const uWypadkowe = Number(((contributionBasis * socialContributions.uWypadkowePercentage) / 100).toFixed(2));
+    const funduszPracy = Number(((contributionBasis * socialContributions.funduszPracyPercentage) / 100).toFixed(2));
     const monthlySocialContributions = (uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy)
     const yearlySocialContributions =  monthlySocialContributions * 12;
 

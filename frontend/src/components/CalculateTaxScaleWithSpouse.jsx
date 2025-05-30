@@ -29,8 +29,8 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
     const taxScaleResult = calculateTaxScaleWithSpouse(taxData,taxParameters,socialContributionsValue,taxBreaksValue.totalValue);
 
     // Składka zdrowotna
-    const healthContributionsValue = calculateHealthContributionsForTaxScale(taxScaleResult.netIncome, healthCountributions.taxScale.valuePercentage);
-    const spouseHealthContributionValue = calculateHealthContributionsForTaxScale(taxScaleResult.spouseNetIncome, healthCountributions.taxScale.valuePercentage);
+    const healthContributionsValue = calculateHealthContributionsForTaxScale(taxScaleResult.netIncome, healthCountributions.taxScale.valuePercentage,taxParameters);
+    const spouseHealthContributionValue = calculateHealthContributionsForTaxScale(taxScaleResult.spouseNetIncome, healthCountributions.taxScale.valuePercentage,taxParameters);
 
     return (
         <div className="tax-result__box">
@@ -106,7 +106,7 @@ const CalculateTaxScaleWithSpouse = ({data}) => {
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`(${formatPLN(taxScaleResult.taxBasePerSpouse)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
+                                    calculations={`(${formatPLN(taxParameters.taxScale.incomeThreshold)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
                         </>
                     }
                     <TaxStep name="Należny podatek na małżonka:" 

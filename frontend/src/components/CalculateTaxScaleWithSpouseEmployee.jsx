@@ -33,7 +33,7 @@ const CalculateTaxScaleWithSpouseEmployee = ({data}) => {
     const taxScaleResult = calculateTaxScaleWithSpouseEmployee(taxData,taxParameters,socialContributionsValue,spousSocialContributionsValue,taxBreaksValue.totalValue);
 
     // Składka zdrowotna
-    const healthContributionsValue = calculateHealthContributionsForTaxScale(taxScaleResult.netIncome, healthCountributions.taxScale.valuePercentage);
+    const healthContributionsValue = calculateHealthContributionsForTaxScale(taxScaleResult.netIncome, healthCountributions.taxScale.valuePercentage,taxParameters);
     const spouseHealthContributionValue = calculateEmployeeHealthContributionsForTaxScale(taxData.spouseIncome,healthCountributions,spousSocialContributionsValue);
 
 
@@ -121,7 +121,7 @@ const CalculateTaxScaleWithSpouseEmployee = ({data}) => {
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`(${formatPLN(taxScaleResult.taxBasePerSpouse)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
+                                    calculations={`(${formatPLN(taxParameters.taxScale.incomeThreshold)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
                         </>
                     }
                     <TaxStep name="Należny podatek na małżonka:" 
