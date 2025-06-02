@@ -4,8 +4,8 @@ import { calculateSocialContributions } from "../utils/calculateSocialContributi
 import { calculateTaxScale } from "../utils/calculateTaxScale";
 import { calculateFlatTax } from "../utils/calculateFlatTax";
 import { calculateLumpSumTax } from "../utils/calculateLumpSumTax";
-import { calculateHealthContributionsForTaxScale } from "../utils/calculateHealthContributionsForTaxScale";
-import { calculateHealtContributionForFlatTax } from "../utils/calculateHealtContributionForFlatTax";
+import { calculateHealthContributionForTaxScale } from "../utils/calculateHealthContributionForTaxScale";
+import { calculateHealthContributionForFlatTax } from "../utils/calculateHealthContributionForFlatTax";
 import { calculateHealthContributionForLumpSumTax } from "../utils/calculateHealthContributionForLumpSumTax";
 import { formatPLN } from "../utils/formatPLN";
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -17,7 +17,7 @@ const DisplayTaxComparison = ({data}) => {
     const {income} = taxData
     const avgIncomeLastQuaterPrevYear = data.taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
     const {socialContributions} = taxParameters;
-    const {healthCountributions} = taxParameters;
+    const {healthContributions} = taxParameters;
     const healthCountributionsForLumpSumTax = healthCountributions.lumpSumTax;
     const netIncome = (taxData.income - taxData.costsOfIncome);
 
@@ -26,8 +26,8 @@ const DisplayTaxComparison = ({data}) => {
 
     // Składka zdrowotna
     const lumpSumTaxHealthContribution = calculateHealthContributionForLumpSumTax(income,healthCountributionsForLumpSumTax,avgIncomeLastQuaterPrevYear);
-    const taxScaleHealthContribution = calculateHealthContributionsForTaxScale(netIncome,healthCountributions.taxScale.valuePercentage,taxParameters);
-    const flatTaxHealthContribution = calculateHealtContributionForFlatTax(netIncome,healthCountributions);
+    const taxScaleHealthContribution = calculateHealthContributionForTaxScale(netIncome,healthContributions.taxScale.valuePercentage,taxParameters);
+    const flatTaxHealthContribution = calculateHealthContributionForFlatTax(netIncome,healthContributions);
     
     // Wyniki obliczeń podatku
     const taxScaleResult = calculateTaxScale(taxData,taxParameters,socialContributionsValue);

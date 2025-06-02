@@ -10,14 +10,14 @@ const CalculateLumpSumTax = ({data}) => {
 
     const income = data.taxData.income;
     const socialContributions = data.taxParameters.socialContributions;
-    const avgIncomeLastQuaterPrevYear = data.taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
-    const healthCountributions = data.taxParameters.healthCountributions.lumpSumTax;
+    const avgIncomeLastQuaterPrevYear = data.taxParameters.healthContributions.avgIncomeLastQuaterPrevYear;
+    const healthContributions = data.taxParameters.healthContributions.lumpSumTax;
 
     const [showSteps, setShowSteps] = useState(false);
 
     const socialContributionsValue = calculateSocialContributions(socialContributions)
     
-    const healthContributionsValue = calculateHealthContributionForLumpSumTax(income,healthCountributions,avgIncomeLastQuaterPrevYear);
+    const healthContributionsValue = calculateHealthContributionForLumpSumTax(income,healthContributions,avgIncomeLastQuaterPrevYear);
     
     const lumpSumTaxResult = calculateLumpSumTax(data,socialContributionsValue,healthContributionsValue)
 
@@ -54,30 +54,30 @@ const CalculateLumpSumTax = ({data}) => {
                     <TaxStep name="Roczna suma składek społecznych:" 
                              calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
                     <p className="tax-step__heading">3. Obliczanie składki zdrowotnej:</p> 
-                    { income < healthCountributions.small.maxIncome ? 
+                    { income < healthContributions.small.maxIncome ? 
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.small.basisPercentage}% = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthContributions.small.basisPercentage}% = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.small.valuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthContributions.small.valuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
-                    { (income >= healthCountributions.small.maxIncome && income <= healthCountributions.medium.maxIncome) ?
+                    { (income >= healthContributions.small.maxIncome && income <= healthContributions.medium.maxIncome) ?
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.medium.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthContributions.medium.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.medium.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthContributions.medium.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
-                    { income > healthCountributions.medium.maxIncome ?
+                    { income > healthContributions.medium.maxIncome ?
                         <>
                             <TaxStep name="Podstawa do obliczeni składki zdrowotnej:" 
-                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthCountributions.big.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
+                            calculations={`${formatPLN(avgIncomeLastQuaterPrevYear)} × ${healthContributions.big.basisPercentage}%  = ${formatPLN(healthContributionsValue.healthContributionBasis)}` } />
                             <TaxStep name="Obliczenie składki zdrowotnej:" 
-                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthCountributions.big.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
+                            calculations={`${formatPLN(healthContributionsValue.healthContributionBasis)} × ${healthContributions.big.valuePercentage}%  = ${formatPLN(healthContributionsValue.monthlyHealthContributionsValue)}` } />
                         </>
                         : null
                     }
@@ -86,7 +86,7 @@ const CalculateLumpSumTax = ({data}) => {
                     <TaxStep name="Roczna składka zdrowotna:" 
                              calculations={`${formatPLN(healthContributionsValue.yearlyHealthContributionsValue)}`} />
                     <TaxStep name="Limit odliczenia składki zdrowotnej" 
-                             calculations={`${formatPLN(healthContributionsValue.yearlyHealthContributionsValue)} / 2 = ${formatPLN(lumpSumTaxResult.limitHealtContribution)}`} />
+                             calculations={`${formatPLN(healthContributionsValue.yearlyHealthContributionsValue)} * ${healthContributions.healthDeductionLimitPercentage}% = ${formatPLN(lumpSumTaxResult.limitHealtContribution)}`} />
                     <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
                     <TaxStep name="Obliczenie podstawy opodatkowania:" 
                              calculations={`${formatPLN(income)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} - ${formatPLN(lumpSumTaxResult.limitHealtContribution)} = ${formatPLN(lumpSumTaxResult.taxBase)}`} />

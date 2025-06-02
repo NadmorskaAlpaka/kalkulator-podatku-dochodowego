@@ -1,17 +1,17 @@
-export const calculateHealthContributionForLumpSumTax = (income,healthCountributions,avgIncomeLastQuaterPrevYear) => {
+export const calculateHealthContributionForLumpSumTax = (income,healthContributions,avgIncomeLastQuaterPrevYear) => {
 
     let monthlyHealthContributionsValue = 0;
     let healthContributionBasis = 0;
 
-    if(income < healthCountributions.small.maxIncome){
-        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.small.basisPercentage) / 100;
-        monthlyHealthContributionsValue = (healthContributionBasis * healthCountributions.small.valuePercentage) / 100;
-    } else if (income >= healthCountributions.small.maxIncome && income <= healthCountributions.medium.maxIncome){
-        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.medium.basisPercentage) / 100;
-        monthlyHealthContributionsValue = (healthContributionBasis * healthCountributions.medium.valuePercentage) / 100;
-    } else if (income > healthCountributions.medium.maxIncome) {
-        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthCountributions.big.basisPercentage) / 100;
-        monthlyHealthContributionsValue = (healthContributionBasis * healthCountributions.big.valuePercentage) / 100;
+    if(income < healthContributions.small.maxIncome){
+        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthContributions.small.basisPercentage) / 100;
+        monthlyHealthContributionsValue = (healthContributionBasis * healthContributions.small.valuePercentage) / 100;
+    } else if (income >= healthContributions.small.maxIncome && income <= healthContributions.medium.maxIncome){
+        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthContributions.medium.basisPercentage) / 100;
+        monthlyHealthContributionsValue = (healthContributionBasis * healthContributions.medium.valuePercentage) / 100;
+    } else if (income > healthContributions.medium.maxIncome) {
+        healthContributionBasis = (avgIncomeLastQuaterPrevYear * healthContributions.big.basisPercentage) / 100;
+        monthlyHealthContributionsValue = (healthContributionBasis * healthContributions.big.valuePercentage) / 100;
     }
 
     let yearlyHealthContributionsValue = monthlyHealthContributionsValue * 12;

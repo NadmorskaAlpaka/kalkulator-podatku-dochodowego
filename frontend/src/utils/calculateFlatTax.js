@@ -2,13 +2,14 @@ export const calculateFlatTax = (taxData,taxParameters,socialContributionsValue,
 
     const { flatTax } = taxParameters;
     const { danina } = taxParameters;
+    const { healthDeductionLimit } = taxParameters.healthContributions.flatTax
 
     let tax = 0;
     let daninaValue = 0
 
     const netIncome = (taxData.income - taxData.costsOfIncome);
 
-    const healthContriubutionWithLimit = healthContributionsValue > 12900 ? 12900 : healthContributionsValue;
+    const healthContriubutionWithLimit = healthContributionsValue > healthDeductionLimit ? healthDeductionLimit : healthContributionsValue;
 
     const taxBase = (netIncome - socialContributionsValue.yearlySocialContributions - healthContriubutionWithLimit);
 

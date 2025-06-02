@@ -1,4 +1,4 @@
-export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,socialContributions,spousSocialContributionsValue,taxBreaksValue) => {
+export const calculateTaxScaleWithEmployeeSpouse = (taxData,taxParameters,socialContributions,spousSocialContributionsValue,taxBreaksValue) => {
 
     let tax = 0;
     let daninaValue = 0;
@@ -16,7 +16,7 @@ export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,social
     const totalTaxBase = taxBase + spouseTaxBase;
     const taxBasePerSpouse = totalTaxBase / 2;
 
-    const isTaxFree = taxParameters.taxFreeAmout > taxBasePerSpouse ;
+    const isTaxFree = taxParameters.taxFreeAmount > taxBasePerSpouse ;
     let taxPerSpouse = 0;
 
     const yearlyTaxReduction = taxScale.monthlyTaxReductionAmount * 12;
@@ -24,9 +24,9 @@ export const calculateTaxScaleWithSpouseEmployee = (taxData,taxParameters,social
     if(!isTaxFree){
         // Progi podatkowe
         if(taxBasePerSpouse <= taxScale.incomeThreshold){
-            taxPerSpouse = ((taxBasePerSpouse * taxScale.firstPercentage) / 100) - yearlyTaxReduction;
+            taxPerSpouse = ((taxBasePerSpouse * taxScale.lowerRatePercentage) / 100) - yearlyTaxReduction;
         } else if(taxBasePerSpouse > taxScale.incomeThreshold){
-            taxPerSpouse = (((taxScale.incomeThreshold * taxScale.firstPercentage) / 100) - yearlyTaxReduction) + ((taxBasePerSpouse - taxScale.incomeThreshold) * taxScale.secondPercentage) / 100; 
+            taxPerSpouse = (((taxScale.incomeThreshold * taxScale.lowerRatePercentage) / 100) - yearlyTaxReduction) + ((taxBasePerSpouse - taxScale.incomeThreshold) * taxScale.higherRatePercentage) / 100; 
         }
 
         tax = taxPerSpouse * 2;
