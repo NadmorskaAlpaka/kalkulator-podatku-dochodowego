@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { employeeTaxScaleWithSpouse } from "../utils/employeeTaxScaleWithSpouse";
+import { calculateEmployeeTaxScaleWithSpouse } from "../utils/calculateEmployeeTaxScaleWithSpouse";
 import { employeeTaxBreaks } from "../utils/employeeTaxBreaks";
-import { calculateEmployeeHealthContributionsForTaxScale } from "../utils/calculateEmployeeHealthContributionsForTaxScale"
-import { calculateEmployeeSocialContributionsForTaxScale } from "../utils/calculateEmployeeSocialContributionsForTaxScale"
+import { calculateHealthContributionsForEmployeeTaxScale } from "../utils/calculateHealthContributionsForEmployeeTaxScale"
+import { calculateSocialContributionsForEmployeeTaxScale } from "../utils/calculateSocialContributionsForEmployeeTaxScale"
 import { formatPLN } from "../utils/formatPLN";
 import "../styles/calculateTaxScale.css";
 import SpouseTaxResult from "./SpouseTaxResult";
@@ -14,26 +14,26 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
     const {taxData} = data;
     const {taxParameters} = data;
     const {employeeSocialContributions} = taxParameters;
-    const {healthCountributions} = taxParameters;
+    const {healthContributions} = taxParameters;
     const {taxBreaks} = taxParameters;
-    const {taxFreeAmout} = taxParameters;
+    const {taxFreeAmount} = taxParameters;
 
     const [showSteps, setShowSteps] = useState(false);
     const [monthly,setMonthly] = useState(false);
     
     // pracownik
-    let socialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData.income);
-    let spousSocialContributionsValue = calculateEmployeeSocialContributionsForTaxScale(employeeSocialContributions,taxData.spouseIncome);
+    let socialContributionsValue = calculateSocialContributionsForEmployeeTaxScale(employeeSocialContributions,taxData.income);
+    let spousSocialContributionsValue = calculateSocialContributionsForEmployeeTaxScale(employeeSocialContributions,taxData.spouseIncome);
 
     // Ulgi podatkowe
     const taxBreaksValue = employeeTaxBreaks(taxData, taxBreaks);
 
     // Wyniki obliczeń podatku
-    const taxScaleResult = employeeTaxScaleWithSpouse(taxData,taxParameters,socialContributionsValue,spousSocialContributionsValue,taxBreaksValue.totalValue);
+    const taxScaleResult = calculateEmployeeTaxScaleWithSpouse(taxData,taxParameters,socialContributionsValue,spousSocialContributionsValue,taxBreaksValue.totalValue);
 
     // Składka zdrowotna
-    const healthContributionsValue = calculateEmployeeHealthContributionsForTaxScale(taxData.income,healthCountributions,socialContributionsValue);
-    const spouseHealthContributionValue = calculateEmployeeHealthContributionsForTaxScale(taxData.spouseIncome,healthCountributions,spousSocialContributionsValue);
+    const healthContributionsValue = calculateHealthContributionsForEmployeeTaxScale(taxData.income,healthContributions,socialContributionsValue);
+    const spouseHealthContributionValue = calculateHealthContributionsForEmployeeTaxScale(taxData.spouseIncome,healthContributions,spousSocialContributionsValue);
 
     const handleCheckbox = (e,setter) => {
         setter(e.target.checked);
@@ -103,14 +103,14 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                              calculations={`${formatPLN(spousSocialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}`} />
                     <p className="tax-step__heading">3. Obliczanie ubezpieczenia zdrowotnego:</p>  
                     <TaxStep name="Miesięczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${formatPLN(socialContributionsValue.monthlyIncome)} - ${formatPLN(socialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(socialContributionsValue.monthlyIncome)} - ${formatPLN(socialContributionsValue.monthlySocialContributions)}) × ${healthContributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.monthlyHealthContribution)}`} />
                     <TaxStep name="Roczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.yearlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)}) × ${healthContributions.taxScale.employeeValuePercentage}% = ${formatPLN(healthContributionsValue.yearlyHealthContribution)}`} />
                     <hr />
                     <TaxStep name="Miesięczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${formatPLN(spousSocialContributionsValue.monthlyIncome)} - ${formatPLN(spousSocialContributionsValue.monthlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.monthlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(spousSocialContributionsValue.monthlyIncome)} - ${formatPLN(spousSocialContributionsValue.monthlySocialContributions)}) × ${healthContributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.monthlyHealthContribution)}`} />
                     <TaxStep name="Roczne ubezpieczenie zdrowotne:" 
-                             calculations={`(${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}) × ${healthCountributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.yearlyHealthContribution)}`} />
+                             calculations={`(${formatPLN(taxScaleResult.spouseNetIncome)} - ${formatPLN(spousSocialContributionsValue.yearlySocialContributions)}) × ${healthContributions.taxScale.employeeValuePercentage}% = ${formatPLN(spouseHealthContributionValue.yearlyHealthContribution)}`} />
                     <p className="tax-step__heading">4. Obliczanie podstawy opodatkowania:</p>
                     <TaxStep name="Podstawa opodatkowania:" 
                              calculations={`${formatPLN(taxScaleResult.netIncome)} - ${formatPLN(socialContributionsValue.yearlySocialContributions)} = ${formatPLN(taxScaleResult.taxBase)}`} />
@@ -122,19 +122,19 @@ const CalculateTaxScaleForEmployeeWithSpouse = ({data}) => {
                              calculations={`${formatPLN(taxScaleResult.totalTaxBase)} / 2 = ${formatPLN(taxScaleResult.taxBasePerSpouse)}`} />
                     <p className="tax-step__heading">5. Zastosowanie kwoty wolnej od podatku:</p>     
                     <TaxStep name="Wolny od podatku:" 
-                             calculations={`${!taxScaleResult.isTaxFree ? "Nie" : "Tak"} ponieważ ${taxFreeAmout} zł ${!taxScaleResult.isTaxFree ? "<" : ">"} ${formatPLN(taxScaleResult.taxBasePerSpouse)}`} />
+                             calculations={`${!taxScaleResult.isTaxFree ? "Nie" : "Tak"} ponieważ ${taxFreeAmount} zł ${!taxScaleResult.isTaxFree ? "<" : ">"} ${formatPLN(taxScaleResult.taxBasePerSpouse)}`} />
                     { 
                         taxScaleResult.taxBase < taxParameters.taxScale.incomeThreshold ? 
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - pierwszy prog podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`${formatPLN(taxScaleResult.taxBasePerSpouse)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)} = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
+                                    calculations={`${formatPLN(taxScaleResult.taxBasePerSpouse)} × ${taxParameters.taxScale.lowerRatePercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)} = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
                         </>
                         :
                         <>
                             <p className="tax-step__heading">6. Obliczenie podatku - drugi próg podatkowy:</p>  
                             <TaxStep name="Obliczenie podatku:" 
-                                    calculations={`(${formatPLN(taxParameters.taxScale.incomeThreshold)} × ${taxParameters.taxScale.firstPercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.secondPercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
+                                    calculations={`(${formatPLN(taxParameters.taxScale.incomeThreshold)} × ${taxParameters.taxScale.lowerRatePercentage}% - ${formatPLN(taxScaleResult.yearlyTaxReduction)}) + (${formatPLN(taxScaleResult.taxBasePerSpouse)} - ${formatPLN(taxParameters.taxScale.incomeThreshold)}) × ${taxParameters.taxScale.higherRatePercentage} % = ${formatPLN(taxScaleResult.taxPerSpouse)}`} />
                         </>
                     }
                     <TaxStep name="Należny podatek na małżonka:" 

@@ -1,9 +1,9 @@
 export const defaultValues = {
     flatTax: 19,
     taxScale: {
-        firstPercentage: 12,
+        lowerRatePercentage: 12,
         incomeThreshold: 120000,
-        secondPercentage: 32,
+        higherRatePercentage: 32,
         employeeMonthlyCostsOfIncome: 250,
         monthlyTaxReductionAmount: 300
     },
@@ -21,16 +21,17 @@ export const defaultValues = {
         uRentowePercentage: 1.50,
         uChorobowePercentage: 2.45
     },
-    healthCountributions: {
-        mimIncome: 4666,
+    healthContributions: {
+        minIncome: 4666,
         avgIncomeLastQuaterPrevYear: 8549.18,
         flatTax: {
             valuePercentage: 4.9,
-            minHealthCountributions: 314.96
+            minHealthContribution: 314.96,
+            healthDeductionLimit: 12900
         },
         taxScale: {
             valuePercentage: 9,
-            minHealthCountributions: 314.96,
+            minHealthContribution: 314.96,
             employeeValuePercentage: 9,
         },
         lumpSumTax: {
@@ -47,7 +48,8 @@ export const defaultValues = {
             big: {
                 basisPercentage: 180,
                 valuePercentage: 9,
-            }
+            },
+            healthDeductionLimitPercentage: 50
         },
     },
     taxBreaks: {
@@ -56,7 +58,7 @@ export const defaultValues = {
             one: {
                 value: 1112.04,
                 limit: 56000,
-                spousLimit: 112000
+                spouseLimit: 112000
             },
             two: 2224.08,
             three: 4224.12,
@@ -64,7 +66,7 @@ export const defaultValues = {
             moreThanFour: 2700,
         },
         bloodDonation: {
-            maxIncomPercentage: 6,
+            maxIncomePercentage: 6,
             value: 130
         },
         youth: 85528
@@ -73,5 +75,5 @@ export const defaultValues = {
         valuePercentage: 4,
         minIncome: 1000000
     },
-    taxFreeAmout: 30000
+    taxFreeAmount: 30000
 }

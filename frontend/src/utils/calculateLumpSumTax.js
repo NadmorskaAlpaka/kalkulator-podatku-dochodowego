@@ -1,10 +1,11 @@
 export const calculateLumpSumTax = (data,socialContributionsValue,healthContributionsValue) => {
 
     const lumpSumValue = data.taxData.selectedLumpSumValue;
-    const income = data.taxData.income;;
+    const income = data.taxData.income;
     let tax = 0;
+    const healthDeductionLimitPercentage = data.taxParameters.healthContributions.lumpSumTax.healthDeductionLimitPercentage;
 
-    const limitHealtContribution = (healthContributionsValue.yearlyHealthContributionsValue / 2)
+    const limitHealtContribution = ((healthContributionsValue.yearlyHealthContributionsValue * healthDeductionLimitPercentage) / 100)
 
     const taxBase = income - socialContributionsValue.yearlySocialContributions - limitHealtContribution;
 

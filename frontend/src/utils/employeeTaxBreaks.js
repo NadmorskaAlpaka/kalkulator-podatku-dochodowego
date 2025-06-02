@@ -21,8 +21,8 @@ export const employeeTaxBreaks = (taxData,taxBreaks) => {
     }
 
     let bloodDonation = taxData.bloodLiters * taxBreaks.bloodDonation.value;
-    if(bloodDonation > (taxData.income * taxBreaks.bloodDonation.maxIncomPercentage / 100)){
-        bloodDonation = (taxData.income * taxBreaks.bloodDonation.maxIncomPercentage / 100);
+    if(bloodDonation > (taxData.income * taxBreaks.bloodDonation.maxIncomePercentage / 100)){
+        bloodDonation = (taxData.income * taxBreaks.bloodDonation.maxIncomePercentage / 100);
     }
 
     let rehabilitation = taxData.rehabilitationValue;

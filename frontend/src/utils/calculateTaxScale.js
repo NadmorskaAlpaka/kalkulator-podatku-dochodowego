@@ -10,7 +10,7 @@ export const calculateTaxScale = (taxData,taxParameters,socialContributions,taxB
 
     const taxBase = (netIncome - socialContributions.yearlySocialContributions);
 
-    const isTaxFree = taxParameters.taxFreeAmout > taxBase ;
+    const isTaxFree = taxParameters.taxFreeAmount > taxBase ;
 
     const yearlyTaxReduction = taxScale.monthlyTaxReductionAmount * 12;
 
@@ -18,9 +18,9 @@ export const calculateTaxScale = (taxData,taxParameters,socialContributions,taxB
 
         // Progi podatkowe
         if(taxBase < taxScale.incomeThreshold){
-            tax = ((taxBase * taxScale.firstPercentage) / 100) - yearlyTaxReduction;
+            tax = ((taxBase * taxScale.lowerRatePercentage) / 100) - yearlyTaxReduction;
         } else if(taxBase >= taxScale.incomeThreshold){
-            tax = (((taxScale.incomeThreshold * taxScale.firstPercentage) / 100) - yearlyTaxReduction) + ((taxBase - taxScale.incomeThreshold) * taxScale.secondPercentage) / 100; 
+            tax = (((taxScale.incomeThreshold * taxScale.lowerRatePercentage) / 100) - yearlyTaxReduction) + ((taxBase - taxScale.incomeThreshold) * taxScale.higherRatePercentage) / 100; 
         }
 
         if(tax < 0){
