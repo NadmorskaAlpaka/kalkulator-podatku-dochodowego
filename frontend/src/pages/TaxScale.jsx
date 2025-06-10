@@ -5,6 +5,7 @@ import TaxInput from "../components/TaxInput";
 import ToggleInput from "../components/ToggleInput";
 import Checkbox from "../components/Checkbox";
 import { useNavigate } from "react-router-dom";
+import ZUSSelector from "../components/ZusSelector";
 
 const TaxScale = ({taxParameters}) => {
 
@@ -22,6 +23,8 @@ const TaxScale = ({taxParameters}) => {
         other: false,
       });
     const [availableTaxBreaks, setAvailableTaxBreaks] = useState(false);
+
+    const [zus, setZus] = useState(null);
 
     const [spouseBussines, setSpouseBussines] = useState(false);
     const [taxWithSpous, setTaxWithSpous] = useState(false);
@@ -47,6 +50,46 @@ const TaxScale = ({taxParameters}) => {
           [e.target.name]: e.target.checked,
         }));
     };
+
+    useEffect(() => {
+        console.log("Zus",zus);
+    },[zus])
+
+useEffect(() => {
+    if (zus !== null) {
+        setTaxWithSpous(false);
+    }
+}, [zus]);
+
+useEffect(() => {
+    if (taxWithSpous) {
+        setZus(null);
+    }
+}, [taxWithSpous]);
+
+useEffect(() => {
+    if (zus !== null) {
+        // Znajdź wszystkie labelki na stronie
+        const labels = document.querySelectorAll("label");
+
+        labels.forEach(label => {
+            if (label.textContent.trim() === "Rozliczasz się wspólnie z małżonkiem?") {
+                // Znajdź pierwszy input po labelce
+                let input = label.nextElementSibling;
+                while (input && input.tagName !== "INPUT") {
+                    input = input.nextElementSibling;
+                }
+
+                if (input && input.type === "checkbox") {
+                    input.checked = false;
+                    input.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            }
+        });
+    }
+}, [zus]);
+
+
 
     const validateInputs = () => {
         let error = false;
@@ -95,7 +138,8 @@ const TaxScale = ({taxParameters}) => {
             internetValue: Number(internetValue),
             rehabilitationValue: Number(rehabilitationValue),
             childrenNumber: Number(childrenNumber),
-            otherTaxBreakValue: Number(otherTaxBreakValue)
+            otherTaxBreakValue: Number(otherTaxBreakValue),
+            zus
         }
 
         let data = {
@@ -120,10 +164,11 @@ const TaxScale = ({taxParameters}) => {
                     <TaxInput label="Twoj roczny przychód" type="number" value={income}
                               handleChange={(e) => handleChange(e,setIncome)} 
                     />
-                        <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
+                    <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
                               handleChange={(e) => handleChange(e,setCostsOfIncome)} />
+                    <ZUSSelector selected={zus} setSelected={setZus} disabled={taxWithSpous}/>
                     <ToggleInput label="Przysługują Ci ulgi podatkowe?" 
-                                 handleChange={(e) => handleCheckbox(e,setAvailableTaxBreaks)}
+                              handleChange={(e) => handleCheckbox(e,setAvailableTaxBreaks)}
                     />
                     <div className={`animated-box ${availableTaxBreaks ? "open" : "closed"}`}>
                         <p className="tax-scale__breaks">Wybierz ulgi podatkowe:</p>
@@ -154,6 +199,8 @@ const TaxScale = ({taxParameters}) => {
                     </div>
                     <ToggleInput label="Rozliczasz się wspólnie z małżonkiem?" 
                                  handleChange={(e) => handleCheckbox(e,setTaxWithSpous)}
+                                 disabled={zus !== null}
+                                 checked={zus !== null ? false : taxWithSpous}
                     />
                     <div className={`animated-box ${taxWithSpous ? "open" : "closed"}`}>
                         <ToggleInput label="Czy małżonek prowadzi działalność gospodarczą?" 

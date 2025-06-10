@@ -2,6 +2,7 @@ import React, {useState, useEffect } from "react";
 import "../styles/flatTax.css";
 import PathHead from "../components/PathHead";
 import TaxInput from "../components/TaxInput";
+import ZUSSelector from "../components/ZusSelector";
 import { useNavigate } from "react-router-dom";
 
 const FlatTax = ({taxParameters}) => {
@@ -10,6 +11,8 @@ const FlatTax = ({taxParameters}) => {
 
     const [income, setIncome] = useState(0);
     const [costsOfIncome, setCostsOfIncome] = useState(0);
+
+    const [zus, setZus] = useState(null);
 
     const [errorMessage, setErrorMessage] = useState([]);
     const [error, setError] = useState(false);
@@ -43,7 +46,8 @@ const FlatTax = ({taxParameters}) => {
     const submit = () => {
         const taxData = {
             income,
-            costsOfIncome
+            costsOfIncome,
+            zus
         }
 
         let data = {
@@ -71,6 +75,7 @@ const FlatTax = ({taxParameters}) => {
                     <TaxInput label="Twoje roczne koszty uzyskania przychodu" type="number" value={costsOfIncome}
                         handleChange={(e) => handleChange(e, setCostsOfIncome)}
                     />
+                    <ZUSSelector selected={zus} setSelected={setZus} />
                     { 
                         error && 
                         <div>

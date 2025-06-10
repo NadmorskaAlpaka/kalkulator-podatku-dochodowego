@@ -3,6 +3,7 @@ import "../styles/taxCompare.css";
 import PathHead from "../components/PathHead";
 import TaxInput from "../components/TaxInput";
 import TaxInputSelect from "../components/TaxInputSelect";
+import ZUSSelector from "../components/ZusSelector";
 import { useNavigate } from "react-router-dom";
 
 const TaxCompare = ({taxParameters}) => {
@@ -13,6 +14,8 @@ const TaxCompare = ({taxParameters}) => {
 
     const [errorMessage, setErrorMessage] = useState([]);
     const [error, setError] = useState(false);
+
+    const [zus, setZus] = useState(null);
     
     const [income, setIncome] = useState(0);
     const [costsOfIncome, setCostsOfIncome] = useState(0);
@@ -20,6 +23,10 @@ const TaxCompare = ({taxParameters}) => {
 
     const handleChange = (e, setter) => {
         setter(e.target.value)
+    }
+
+    const handleCheckbox = (e,setter) => {
+        setter(e.target.checked);
     }
 
     const validateInputs = () => {
@@ -53,7 +60,8 @@ const TaxCompare = ({taxParameters}) => {
         const taxData = {
             income,
             costsOfIncome,
-            selectedLumpSumValue
+            selectedLumpSumValue,
+            zus
         }
 
         let data = {
@@ -87,6 +95,7 @@ const TaxCompare = ({taxParameters}) => {
                                     options={lumpSumTax} 
                                     defaultText="Wybierz stawkę opodatkowania"
                     />
+                    <ZUSSelector selected={zus} setSelected={setZus} />
                     { 
                         error && 
                         <div>

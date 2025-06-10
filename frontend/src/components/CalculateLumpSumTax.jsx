@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { calculateSocialContributions } from "../utils/calculateSocialContributions";
+import { calculateSmallSocialContributions } from "../utils/calculateSmallSocialContributions";
+import { calculateStartSocialContributions } from "../utils/calculateStartSocialContributions";
+import { calculateStartAndSmallSocialContributions } from "../utils/calculateStartAndSmallSocialContributions";
 import { calculateHealthContributionForLumpSumTax } from "../utils/calculateHealthContributionForLumpSumTax";
 import { calculateLumpSumTax } from "../utils/calculateLumpSumTax";
 import { formatPLN } from "../utils/formatPLN";
@@ -8,6 +11,7 @@ import TaxResult from "./TaxResult";
 
 const CalculateLumpSumTax = ({data}) => {
 
+    const { taxData } = data;
     const income = data.taxData.income;
     const socialContributions = data.taxParameters.socialContributions;
     const avgIncomeLastQuaterPrevYear = data.taxParameters.healthContributions.avgIncomeLastQuaterPrevYear;
@@ -15,7 +19,18 @@ const CalculateLumpSumTax = ({data}) => {
 
     const [showSteps, setShowSteps] = useState(false);
 
-    const socialContributionsValue = calculateSocialContributions(socialContributions)
+    // Składka społeczna
+    let socialContributionsValue = 0 
+    
+    if(taxData.zus == "maly_zus"){
+        socialContributionsValue = calculateSmallSocialContributions(socialContributions);
+    } else if(taxData.zus == "zus_na_start") {
+        socialContributionsValue = calculateStartSocialContributions(socialContributions);
+    } else if(taxData.zus == "start_i_maly_zus") {
+        socialContributionsValue = calculateStartAndSmallSocialContributions(socialContributions);
+    } else {
+        socialContributionsValue = calculateSocialContributions(socialContributions);
+    }
     
     const healthContributionsValue = calculateHealthContributionForLumpSumTax(income,healthContributions,avgIncomeLastQuaterPrevYear);
     
@@ -39,6 +54,24 @@ const CalculateLumpSumTax = ({data}) => {
                     <TaxStep name="Stawka ryczałtu:"
                              calculations={`${lumpSumTaxResult.lumpSumValue}%`} />
                     <p className="tax-step__heading">2. Obliczanie składek społecznych:</p>   
+                    {
+                        taxData.zus == "maly_zus" && <TaxStep name="Mały ZUS:" />
+                    }
+                    {
+                        taxData.zus == "zus_na_start" && 
+                        <>
+                            <TaxStep name={`Zus na start: Zwolnienie ze składek przez pierwsze ${socialContributions.ZUSForStartReliefPeriod} miesięcy.`} />
+                            <TaxStep name={`Składki w pozostałe miesiące:`} />
+                        </>
+                    }
+                    {
+                        taxData.zus == "start_i_maly_zus" && 
+                        <>
+                            <TaxStep name={"Zus na start z Małym ZUS-em:"} />
+                            <TaxStep name={`Zwolnienie ze składek przez pierwsze ${socialContributions.ZUSForStartReliefPeriod} miesięcy.`} />
+                            <TaxStep name={`Składki w pozostałe miesiące:`} />
+                        </>
+                    }          
                     <TaxStep name="Ubezpieczenie emerytalne:" 
                              calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uEmerytalnePercentage} % = ${formatPLN(socialContributionsValue.uEmerytalne)}`} />
                     <TaxStep name="Ubezpieczenie rentowe:" 
@@ -47,12 +80,14 @@ const CalculateLumpSumTax = ({data}) => {
                              calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uChorobowePercentage} % = ${formatPLN(socialContributionsValue.uChorobowe)}`} />
                     <TaxStep name="Ubezpieczenie wypadkowe:" 
                              calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.uWypadkowePercentage} % = ${formatPLN(socialContributionsValue.uWypadkowe)}`} />
-                    <TaxStep name="Składka na fundusz pracy:" 
+                    {
+                        (taxData.zus != "maly_zus" && taxData.zus != "start_i_maly_zus") && <TaxStep name="Składka na fundusz pracy:" 
                              calculations={`${formatPLN(socialContributionsValue.contributionBasis)} × ${socialContributions.funduszPracyPercentage} % = ${formatPLN(socialContributionsValue.funduszPracy)}`} />
+                    }
                     <TaxStep name="Miesięczna suma składek społecznych:" 
                              calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)}`} />
                     <TaxStep name="Roczna suma składek społecznych:" 
-                             calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × 12 = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
+                             calculations={`${formatPLN(socialContributionsValue.monthlySocialContributions)} × ${(taxData.zus == "start_i_maly_zus" || taxData.zus == "zus_na_start") ? 12 - socialContributions.ZUSForStartReliefPeriod : "12"} = ${formatPLN(socialContributionsValue.yearlySocialContributions)}`} />
                     <p className="tax-step__heading">3. Obliczanie składki zdrowotnej:</p> 
                     { income < healthContributions.small.maxIncome ? 
                         <>

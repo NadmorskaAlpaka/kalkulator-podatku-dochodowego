@@ -1,0 +1,48 @@
+.zus-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.zus-option-button {
+  width: 100%;
+  text-align: left;
+  max-width: 270px;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #f3f4f6;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  position: relative;
+  
+  box-shadow: 
+    inset 0 1px 2px rgba(0, 0, 0, 0.15),
+    0 1px 1px rgba(255, 255, 255, 0.7);
+  border-color: #cbd5e1; 
+}
+
+.zus-option-button--active {
+  background-color: var(--green);
+  color: var(--black);
+  border-color: var(--green);
+  
+  box-shadow: 
+    0 2px 3px rgba(0, 0, 0, 0.15), 
+    inset 0 -1px 2px rgba(255, 255, 255, 0.5); 
+  transform: translateY(-1px); 
+}
+
+.zus-option-button:hover {
+  background-color: #e5e7eb;
+}
+
+.zus-option-button--active:hover {
+  background-color: var(--green);
+  box-shadow: 
+    0 3px 4px rgba(0, 0, 0, 0.15),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.5);
+}
