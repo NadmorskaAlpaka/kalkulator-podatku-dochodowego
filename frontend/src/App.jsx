@@ -16,8 +16,7 @@ import TaxCompare from "./pages/TaxCompare";
 import CompanyPath from "./pages/CompanyPath";
 import EmployeeTaxScale from "./pages/EmployeeTaxScale";
 
-const LOCAL_STORAGE_KEY = "taxParameters";
-const INIT_FLAG_KEY = "taxDefaultsInitialized";
+const LOCAL_STORAGE_KEY = "taxParams";
 
 function App() {
 
@@ -25,16 +24,6 @@ function App() {
     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
     return savedData ? JSON.parse(savedData) : defaultValues; 
   });
-
-  useEffect(() => {
-    const alreadyInitialized = localStorage.getItem(INIT_FLAG_KEY);
-
-    if (!alreadyInitialized) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(defaultValues));
-      localStorage.setItem(INIT_FLAG_KEY, "true");
-    }
-  }, []);
-
 
   useEffect(() => {
         const handleWheel = (e) => {
