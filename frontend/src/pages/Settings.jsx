@@ -9,6 +9,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
 
     const [message, setMessage] = useState("");
     const [showMessage, setShowMessage] = useState(false);
+    const [bad, setBad] = useState(false);
 
     const [flatTax, setFlatTax] = useState(taxParameters.flatTax);
     const [taxScale, setTaxScale] = useState(taxParameters.taxScale);
@@ -96,6 +97,12 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
     };
 
     const saveChanges = () => {
+        if(ZUSForStartReliefPeriod == 0 || ZUSForStartReliefPeriod > 12){
+            setMessage("ZUS na start nie może być mniejszy niż 1 ani większy niż 12");
+            setShowMessage(true);
+            setBad(true);
+            return
+        }
         let newValues = {
             flatTax: flatTax,
             taxScale: taxScale,
@@ -146,6 +153,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setTaxParameters(newValues);
         setMessage("Ustawienia zostały zapisane!");
         setShowMessage(true);
+        setBad(false)
     }
 
     const setDefaultValues = () => {
@@ -183,6 +191,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setTaxFreeAmount(defaultValues.taxFreeAmount);
         setMessage("Przywrócono ustawienia domyślne!");
         setShowMessage(true);
+        setBad(false)
     }
 
     useEffect(() => {
@@ -196,7 +205,7 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         
     return (
         <section id="settings">
-            <div className={`message__box ${showMessage ? 'visible' : ''}`}>
+            <div className={`message__box ${showMessage ? 'visible' : ''} ${bad ? "wrong" : "good"}`}>
                 <p className="message">{message}</p>
             </div>
             <div className="container">

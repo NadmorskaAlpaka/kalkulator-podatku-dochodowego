@@ -159,7 +159,6 @@
     position: fixed;
     max-width: 350px;
     width: 100%;
-    background-color: var(--green);
     text-align: center;
     padding: 20px 0;
     border-radius: 4px;
@@ -174,5 +173,13 @@
 .message {
     font-size: 14px;
     font-weight: 600;
+}
+
+.wrong {
+    background-color: var(--color3);
+}
+
+.good {
+    background-color: var(--green);
 }
 
