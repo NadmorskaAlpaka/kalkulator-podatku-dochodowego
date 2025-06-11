@@ -1,6 +1,9 @@
 import React from "react";
 import "../styles/displayTaxComparison.css";
 import { calculateSocialContributions } from "../utils/calculateSocialContributions";
+import { calculateSmallSocialContributions } from "../utils/calculateSmallSocialContributions";
+import { calculateStartSocialContributions } from "../utils/calculateStartSocialContributions";
+import { calculateStartAndSmallSocialContributions } from "../utils/calculateStartAndSmallSocialContributions";
 import { calculateTaxScale } from "../utils/calculateTaxScale";
 import { calculateFlatTax } from "../utils/calculateFlatTax";
 import { calculateLumpSumTax } from "../utils/calculateLumpSumTax";
@@ -15,14 +18,24 @@ const DisplayTaxComparison = ({data}) => {
     const {taxData} = data;
     const {taxParameters} = data;
     const {income} = taxData
-    const avgIncomeLastQuaterPrevYear = data.taxParameters.healthCountributions.avgIncomeLastQuaterPrevYear;
+    const avgIncomeLastQuaterPrevYear = data.taxParameters.healthContributions.avgIncomeLastQuaterPrevYear;
     const {socialContributions} = taxParameters;
     const {healthContributions} = taxParameters;
-    const healthCountributionsForLumpSumTax = healthCountributions.lumpSumTax;
+    const healthCountributionsForLumpSumTax = healthContributions.lumpSumTax;
     const netIncome = (taxData.income - taxData.costsOfIncome);
 
     // Składka społeczna
-    const socialContributionsValue = calculateSocialContributions(socialContributions);
+    let socialContributionsValue = 0 
+    
+    if(taxData.zus == "maly_zus"){
+        socialContributionsValue = calculateSmallSocialContributions(socialContributions);
+    } else if(taxData.zus == "zus_na_start") {
+        socialContributionsValue = calculateStartSocialContributions(socialContributions);
+    } else if(taxData.zus == "start_i_maly_zus") {
+            socialContributionsValue = calculateStartAndSmallSocialContributions(socialContributions);
+    } else {
+        socialContributionsValue = calculateSocialContributions(socialContributions);
+    }
 
     // Składka zdrowotna
     const lumpSumTaxHealthContribution = calculateHealthContributionForLumpSumTax(income,healthCountributionsForLumpSumTax,avgIncomeLastQuaterPrevYear);
@@ -123,6 +136,7 @@ const DisplayTaxComparison = ({data}) => {
                     <XAxis dataKey="name" />
                     <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]} />
                     <Tooltip formatter={(value, name) => {
+                        
                         if (name === 'tax') return [value, 'Podatek dochodowy'];
                         return [value, name];
                     }} />

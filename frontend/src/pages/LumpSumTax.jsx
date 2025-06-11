@@ -3,6 +3,7 @@ import "../styles/lumpSumTax.css"
 import PathHead from "../components/PathHead";
 import TaxInput from "../components/TaxInput";
 import TaxInputSelect from "../components/TaxInputSelect";
+import ZUSSelector from "../components/ZusSelector";
 import { useNavigate } from "react-router-dom";
 
 const LumpSumTax = ({taxParameters}) => {
@@ -13,6 +14,8 @@ const LumpSumTax = ({taxParameters}) => {
 
     const [income, setIncome] = useState(0);
     const [selectedLumpSumValue, setSelectedLumpSumValue] = useState(0);
+
+    const [zus, setZus] = useState(null);
 
     const [errorMessage, setErrorMessage] = useState([]);
     const [error, setError] = useState(false);
@@ -43,7 +46,8 @@ const LumpSumTax = ({taxParameters}) => {
     const submit = () => {
         const taxData = {
             income,
-            selectedLumpSumValue
+            selectedLumpSumValue,
+            zus
         }
 
         let data = {
@@ -74,6 +78,7 @@ const LumpSumTax = ({taxParameters}) => {
                                     options={lumpSumTax} 
                                     defaultText="Wybierz stawkę opodatkowania"
                     />
+                    <ZUSSelector selected={zus} setSelected={setZus} />
                     { 
                         error && 
                         <div>

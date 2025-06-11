@@ -1,4 +1,4 @@
-export const calculateSocialContributions = (socialContributions) => {
+export const calculateStartSocialContributions = (socialContributions) => {
     const contributionBasis = socialContributions.minSocialContributionBasis;
 
     const uEmerytalne = Number(((contributionBasis * socialContributions.uEmerytalnePercentage) / 100).toFixed(2));
@@ -8,7 +8,7 @@ export const calculateSocialContributions = (socialContributions) => {
     const funduszPracy = Number(((contributionBasis * socialContributions.funduszPracyPercentage) / 100).toFixed(2));
     const monthlySocialContributions = (uEmerytalne + uRentowe + uChorobowe + uWypadkowe + funduszPracy)
 
-    const yearlySocialContributions =  monthlySocialContributions * 12;
+    const yearlySocialContributions =  monthlySocialContributions * (12 - socialContributions.ZUSForStartReliefPeriod);
 
     const socialContributionsValue = {
         contributionBasis,

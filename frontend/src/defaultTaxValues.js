@@ -15,6 +15,8 @@ export const defaultValues = {
         uChorobowePercentage: 2.45,
         uWypadkowePercentage: 1.67,
         funduszPracyPercentage: 2.45,
+        minSmallZUSSocialContributionBasis: 1399.80,
+        ZUSForStartReliefPeriod: 6
     },
     employeeSocialContributions: {
         uEmerytalnePercentage: 9.76,

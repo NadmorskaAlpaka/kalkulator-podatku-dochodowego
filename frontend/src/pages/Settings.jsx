@@ -22,6 +22,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
     const [uChorobowePercentage,setUChorobowePercentage] = useState(taxParameters.socialContributions.uChorobowePercentage);
     const [uWypadkowePercentage,setUWypadkowePercentage] = useState(taxParameters.socialContributions.uWypadkowePercentage);
     const [funduszPracyPercentage,setFunduszPracyPercentage] = useState(taxParameters.socialContributions.funduszPracyPercentage);
+    const [minSmallZUSSocialContributionBasis,setMinSmallZUSSocialContributionBasis] = useState(taxParameters.socialContributions.minSmallZUSSocialContributionBasis);
+    const [ZUSForStartReliefPeriod,setZUSForStartReliefPeriod] = useState(taxParameters.socialContributions.ZUSForStartReliefPeriod);
 
     const [employeeEmerytalnePercentage,setEmployeeEmerytalnePercentage] = useState(taxParameters.employeeSocialContributions.uEmerytalnePercentage);
     const [employeeRentowePercentage,setEmployeeRentowePercentage] = useState(taxParameters.employeeSocialContributions.uRentowePercentage);
@@ -105,6 +107,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                 uChorobowePercentage: uChorobowePercentage,
                 uWypadkowePercentage: uWypadkowePercentage,
                 funduszPracyPercentage: funduszPracyPercentage,
+                minSmallZUSSocialContributionBasis: minSmallZUSSocialContributionBasis,
+                ZUSForStartReliefPeriod: ZUSForStartReliefPeriod
             },
             employeeSocialContributions: {
                 uEmerytalnePercentage: employeeEmerytalnePercentage,
@@ -154,6 +158,8 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
         setUChorobowePercentage(defaultValues.socialContributions.uChorobowePercentage);
         setUWypadkowePercentage(defaultValues.socialContributions.uWypadkowePercentage);
         setFunduszPracyPercentage(defaultValues.socialContributions.funduszPracyPercentage);
+        setMinSmallZUSSocialContributionBasis(defaultValues.socialContributions.minSmallZUSSocialContributionBasis)
+        setZUSForStartReliefPeriod(defaultValues.socialContributions.ZUSForStartReliefPeriod)
         setEmployeeEmerytalnePercentage(defaultValues.employeeSocialContributions.uEmerytalnePercentage);
         setEmployeeRentowePercentage(defaultValues.employeeSocialContributions.uRentowePercentage);
         setEmployeeChorobowePercentage(defaultValues.employeeSocialContributions.uChorobowePercentage);
@@ -271,6 +277,24 @@ const Settings = ({taxParameters, reset, localStorageKey, setTaxParameters}) => 
                                onChange={(e) => setEmployeeChorobowePercentage(parseFloat(e.target.value) || 0)}
                         />
                         <span>% wynagrodzenia brutto</span>
+                    </div>
+                    <h2 className="settings__category">ZUS na start</h2>
+                    <div>
+                        <span>Zwolnienie ze składek społecznych przez </span>
+                        <input className="settings__input--small" type="number" step="1" min="1" max="12"
+                               value={ZUSForStartReliefPeriod}
+                               onChange={(e) => setZUSForStartReliefPeriod(parseFloat(e.target.value) || 0)}
+                        />
+                        <span> miesięcy</span>
+                    </div>
+                    <h2 className="settings__category">Mały ZUS</h2>
+                    <div>
+                        <span>Minimalna podstawa wymiaru składek w Małym ZUS-ie: </span>
+                        <input className="settings__input--small" type="number" step="0.01"
+                               value={minSmallZUSSocialContributionBasis}
+                               onChange={(e) => setMinSmallZUSSocialContributionBasis(parseFloat(e.target.value) || 0)}
+                        />
+                        <span> zł</span>
                     </div>
                     <h2 className="settings__category">Składka zdrowotna</h2>
                     <div>
